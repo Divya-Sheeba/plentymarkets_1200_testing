@@ -17,7 +17,7 @@ use Plenty\Modules\Basket\Models\Basket;
 use Plenty\Modules\Payment\Models\Payment;
 use Plenty\Plugin\Application;
 use Plenty\Plugin\Translation\Translator;
-
+use Plenty\Plugin\Log\Loggable;
 /**
  * Class NovalnetPaymentAbstract
  *
@@ -25,6 +25,7 @@ use Plenty\Plugin\Translation\Translator;
  */
 abstract class NovalnetPaymentAbstract extends PaymentMethodBaseService
 {
+    use Loggable;
     const PAYMENT_KEY = 'Novalnet';
 
     /**
@@ -113,7 +114,7 @@ abstract class NovalnetPaymentAbstract extends PaymentMethodBaseService
             if(!empty($maximumAmount) && is_numeric($maximumAmount)) {
                 $activatePaymentMaximumAmount = $this->paymentService->getMaxBasketAmount($this->basketRepository, $maximumAmount);
             }
-
+            $this->getLogger(__METHOD__)->error('methods maximum amount', $activatePaymentMaximumAmount);
             return (bool) ($this->paymentService->isMerchantConfigurationValid() && $activatePaymentAllowedCountry && $activatePaymentMinimumAmount && $activatePaymentMaximumAmount);
         }
             return false;
