@@ -78,17 +78,17 @@ abstract class NovalnetPaymentAbstract extends PaymentMethodBaseService
         $isPaymentActive = $this->settingsService->getPaymentSettingsValue('payment_active', strtolower($this::PAYMENT_KEY));
 
         // Hide and Display the Guaranteed and normal Payment based on the guaranteed conditions satisfied
-        if($this::PAYMENT_KEY == 'NOVALNET_INVOICE') {
+        if($isPaymentActive && $this::PAYMENT_KEY == 'NOVALNET_INVOICE') {
             $guaranteeStatus = $this->paymentService->isGuaranteePaymentToBeDisplayed($this->basketRepository, 'novalnet_guaranteed_invoice');
             $isPaymentActive = ($guaranteeStatus == 'normal') ? true : false;
         }
 
-        if($this::PAYMENT_KEY == 'NOVALNET_SEPA') {
+        if($isPaymentActive && $this::PAYMENT_KEY == 'NOVALNET_SEPA') {
             $guaranteeStatus = $this->paymentService->isGuaranteePaymentToBeDisplayed($this->basketRepository, 'novalnet_guaranteed_sepa');
             $isPaymentActive = ($guaranteeStatus == 'normal') ? true : false;
         }
 
-        if(in_array($this::PAYMENT_KEY, ['NOVALNET_GUARANTEED_INVOICE', 'NOVALNET_GUARANTEED_SEPA'])) {
+        if($isPaymentActive && in_array($this::PAYMENT_KEY, ['NOVALNET_GUARANTEED_INVOICE', 'NOVALNET_GUARANTEED_SEPA'])) {
             $guaranteeStatus = $this->paymentService->isGuaranteePaymentToBeDisplayed($this->basketRepository, strtolower($this::PAYMENT_KEY));
             $isPaymentActive = ($guaranteeStatus == 'guarantee') ? true : false;
         }
