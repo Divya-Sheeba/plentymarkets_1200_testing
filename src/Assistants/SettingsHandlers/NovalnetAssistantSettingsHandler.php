@@ -72,15 +72,18 @@ class NovalnetAssistantSettingsHandler implements WizardSettingsHandler
                 case 'novalnet_prepayment':
                 case 'novalnet_cashpayment':
                     $novalnetSettings[$paymentMethodKey]['due_date']             = $data[$paymentKey . 'Duedate'] ?? '';
+                    break;
                 case 'novalnet_guaranteed_invoice':
                 case 'novalnet_guaranteed_sepa':
                     $novalnetSettings[$paymentMethodKey]['force']                = $data[$paymentKey . 'force'] ?? '';
                     $novalnetSettings[$paymentMethodKey]['allow_b2b_customer']   = $data[$paymentKey . 'allowB2bCustomer'] ?? '';
                     $novalnetSettings[$paymentMethodKey]['payment_action']       = $data[$paymentKey . 'PaymentAction'] ?? '';
                     $novalnetSettings[$paymentMethodKey]['onhold_amount']        = $data[$paymentKey . 'OnHold'] ?? '';
+                    break;
                 case 'novalnet_paypal':
                     $novalnetSettings[$paymentMethodKey]['payment_action']       = $data[$paymentKey . 'PaymentAction'] ?? '';
                     $novalnetSettings[$paymentMethodKey]['onhold_amount']        = $data[$paymentKey . 'OnHold'] ?? '';
+                    break;
                 case 'novalnet_googlepay':
                     $novalnetSettings[$paymentMethodKey]['merchant_id']          = $data[$paymentKey . 'MerchantId'] ?? '';
                     $novalnetSettings[$paymentMethodKey]['business_name']        = $data[$paymentKey . 'BusinessName'] ?? '';
@@ -90,6 +93,7 @@ class NovalnetAssistantSettingsHandler implements WizardSettingsHandler
                     $novalnetSettings[$paymentMethodKey]['button_type']          = $data[$paymentKey . 'ButtonType'] ?? '';
                     $novalnetSettings[$paymentMethodKey]['button_theme']         = $data[$paymentKey . 'ButtonTheme'] ?? '';
                     $novalnetSettings[$paymentMethodKey]['button_height']        = $data[$paymentKey . 'ButtonHeight'] ?? '';
+                    break;
             }
         }
         /** @var SettingsService $settingsService */
