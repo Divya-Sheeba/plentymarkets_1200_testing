@@ -493,6 +493,8 @@ class WebhookController extends Controller
             $this->eventData['bookingText'] = $webhookComments;
             // Create the payment to the plenty order
             $this->paymentHelper->createPlentyPayment($this->eventData);
+	    
+	    $webhookComments = 'The payment was refunded';
             return $this->renderTemplate($webhookComments);
         }
     }
