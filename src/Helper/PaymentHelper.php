@@ -401,7 +401,7 @@ class PaymentHelper
             $paymentResponseData['result']['status'] = $paymentResponseData['result']['status'] ?? $paymentResponseData['status'];
             $payment->mopId           = (int) $paymentResponseData['mop'];
             $payment->transactionType = Payment::TRANSACTION_TYPE_BOOKED_POSTING;
-            $payment->status          = ($paymentResponseData['transaction']['status'] == 'ON_HOLD' || ($paymentResponseData['transaction']['status'] == 'PENDING' && !in_array($paymentResponseData['transaction']['payment_type'], ['INVOICE', 'PREPAYMENT', 'CASHPAYMENT', 'MULTIBANCO']))) ? Payment::STATUS_AWAITING_APPROVAL : ($paymentResponseData['result']['status'] == 'FAILURE' ? Payment::STATUS_CANCELED : Payment::STATUS_CAPTURED);
+            $payment->status          = ($paymentResponseData['transaction']['status'] == 'ON_HOLD' || ($paymentResponseData['transaction']['status'] == 'PENDING' && !in_array($paymentResponseData['transaction']['payment_type'], ['INVOICE', 'PREPAYMENT', 'CASHPAYMENT', 'MULTIBANCO']))) ? Payment::STATUS_AWAITING_APPROVAL : (($paymentResponseData['result']['status'] == 'FAILURE' || $paymentResponseData['transaction']['status'] == 'DEACTIVATED') ? Payment::STATUS_CANCELED : Payment::STATUS_CAPTURED);
             $payment->currency        = $paymentResponseData['transaction']['currency'];
             $payment->amount          = $paymentResponseData['transaction']['status'] == 'CONFIRMED' ? ($paymentResponseData['transaction']['amount'] / 100) : 0;
             // Set the transaction status
