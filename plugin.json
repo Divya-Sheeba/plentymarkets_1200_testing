@@ -32,7 +32,7 @@
     },
     "serviceProvider": "Novalnet\\Providers\\NovalnetServiceProvider",
     "runOnBuild": [
-        "Novalnet\\Migrations\\CreateNovalnetPaymentMethods1200",
+        "Novalnet\\Migrations\\CreateNovalnetPaymentMethods",
         "Novalnet\\Migrations\\CreateTransactionTable",
         "Novalnet\\Migrations\\UpdateTransactionTableDataType",
         "Novalnet\\Migrations\\CreateSettingsTable"
