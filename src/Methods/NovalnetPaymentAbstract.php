@@ -114,7 +114,7 @@ abstract class NovalnetPaymentAbstract extends PaymentMethodBaseService
             if(!empty($maximumAmount) && is_numeric($maximumAmount)) {
                 $activatePaymentMaximumAmount = $this->paymentService->getMaxBasketAmount($this->basketRepository, $maximumAmount);
             }
-            $this->getLogger(__METHOD__)->error('methods maximum amount', $activatePaymentMaximumAmount);
+            
             return (bool) ($this->paymentService->isMerchantConfigurationValid() && $activatePaymentAllowedCountry && $activatePaymentMinimumAmount && $activatePaymentMaximumAmount);
         }
             return false;
