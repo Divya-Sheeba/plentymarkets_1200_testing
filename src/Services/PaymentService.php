@@ -864,7 +864,7 @@ class PaymentService
         $transactionComments = '';
         // Display the Novalnet transaction Id
         if(!empty($transactionData['tid'])) {
-            $transactionComments .= PHP_EOL . $this->paymentHelper->getTranslatedText('nn_tid') . $transactionData['tid'];
+            $transactionComments .= $this->paymentHelper->getTranslatedText('nn_tid') . $transactionData['tid'];
         }
         // Display the text if the transaction processed in test mode
         if(!empty($transactionData['test_mode'])) {
