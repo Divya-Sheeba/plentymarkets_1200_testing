@@ -190,7 +190,7 @@ class WebhookController extends Controller
     /**
      * Render twig template for webhook message
      *
-     * @param string $webhookMsg
+     * @param $webhookMsg
      *
      * @return string
      */
@@ -479,9 +479,9 @@ class WebhookController extends Controller
     {
         // If refund is executing
         if(!empty($this->eventData['transaction']['refund']['amount'])) {
-			$webhookComments = sprintf($this->paymentHelper->getTranslatedText('webhook_refund_execution', $this->orderLanguage), $this->parentTid, sprintf('%0.2f', ($this->eventData['transaction']['amount']/100)) , $this->eventData['transaction']['currency']);
+			$webhookComments = sprintf($this->paymentHelper->getTranslatedText('webhook_refund_execution', $this->orderLanguage), $this->parentTid, sprintf('%0.2f', ($this->eventData['transaction']['refund']['amount']/100)) , $this->eventData['transaction']['currency']);
             if(!empty($this->eventData['transaction']['refund']['tid'])) {
-                $webhookComments = sprintf($this->paymentHelper->getTranslatedText('webhook_new_tid_refund_execution', $this->orderLanguage), $this->parentTid, sprintf('%0.2f', ($this->eventData['transaction']['amount']/100)) , $this->eventData['transaction']['currency'], $this->eventTid);
+                $webhookComments = sprintf($this->paymentHelper->getTranslatedText('webhook_new_tid_refund_execution', $this->orderLanguage), $this->parentTid, sprintf('%0.2f', ($this->eventData['transaction']['refund']['amount']/100)) , $this->eventData['transaction']['currency'], $this->eventTid);
             }
             // Get chargeback status it is happened for Full amount or Partially
             $refundStatus = $this->paymentService->getRefundStatus($this->eventData['transaction']['order_no'], $this->orderDetails->orderTotalAmount);
