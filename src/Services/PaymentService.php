@@ -179,6 +179,8 @@ class PaymentService
     {
         if(!is_null($basket) && $basket instanceof Basket) {
             $amount = $this->paymentHelper->convertAmountToSmallerUnit($basket->basketAmount);
+            $this->getLogger(__METHOD__)->error('basket amount', $amount);
+	    $this->getLogger(__METHOD__)->error('maximum amount', $maximumAmount);
             if(!empty($maximumAmount) && $maximumAmount >= $amount) {
                 return true;
             }
