@@ -552,8 +552,8 @@ class PaymentService
             $this->sessionStorage->getPlugin()->setValue('novalnetCheckoutToken', $nnPaymentData['transaction']['checkout_token']);
             $this->sessionStorage->getPlugin()->setValue('novalnetCheckoutUrl', $nnPaymentData['transaction']['checkout_js']);
         }
-        // Update the Order No to the order if the payment before order completion set as 'No'
-        if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) {
+        // Update the Order No to the order if the payment before order completion set as 'No' for direct payments
+        if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true && !$this->isRedirectPayment(strtoupper($nnPaymentData['payment_method']))) {
             $paymentResponseData = $this->sendPostbackCall($nnPaymentData);
             $nnPaymentData = array_merge($nnPaymentData, $paymentResponseData);
         }
