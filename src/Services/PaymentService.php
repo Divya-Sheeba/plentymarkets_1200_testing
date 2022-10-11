@@ -1089,6 +1089,9 @@ class PaymentService
                 }
             }
         }
+	$this->getLogger(__METHOD__)->error('total debit', $totalCallbackDebitAmount);
+	$this->getLogger(__METHOD__)->error('order amount', $orderAmount);
+	$this->getLogger(__METHOD__)->error('transaction details', $transactionDetails);
         $refundStatus = ($orderAmount > $totalCallbackDebitAmount) ? 'Partial' : 'Full';
         return $refundStatus;
     }
