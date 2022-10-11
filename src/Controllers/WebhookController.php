@@ -277,7 +277,7 @@ class WebhookController extends Controller
             return $this->renderTemplate('Order reference not found for the TID ' . $this->parentTid);
         }
         // Get the Order No and proceed further
-        $orderNo = !empty($novalnetOrderDetail->orderNo) ?? $this->eventData['transaction']['order_no'];
+        $orderNo = !empty($novalnetOrderDetail->orderNo) ? $novalnetOrderDetail->orderNo : $this->eventData['transaction']['order_no'];
         // If the order in the Novalnet server to the order number in Novalnet database doesn't match, then there is an issue
         if(!empty($this->eventData['transaction']['order_no']) && !empty($novalnetOrderDetail->orderNo) && (($this->eventData['transaction']['order_no']) != $novalnetOrderDetail->orderNo)) {
             return $this->renderTemplate('Order reference not matching for the order number ' . $orderNo);
@@ -307,8 +307,10 @@ class WebhookController extends Controller
                 }
             }
         } else {
+	    $this->getLogger(__METHOD__)->error('No', $orderNo);
             if(!empty($orderNo)) {
                 $orderObj = $this->getOrderObject($orderNo);
+		$this->getLogger(__METHOD__)->error('obj', $orderObj);
                 // Handle the communication break
                 return $this->handleCommunicationBreak($orderObj);
             }
