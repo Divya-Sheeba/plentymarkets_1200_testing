@@ -151,6 +151,7 @@ class WebhookController extends Controller
         $this->eventTid  = $this->eventData['event']['tid'];
         // Retreiving the shop's order information based on the transaction
         $this->orderDetails = $this->getOrderDetails();
+	$this->getLogger(__METHOD__)->error('Order Details', $this->orderDetails);
         //  Get order language from the order object
         $this->orderLanguage = $this->getOrderLanguage($this->orderDetails);
         // Handle the individual webhook process
@@ -267,6 +268,7 @@ class WebhookController extends Controller
     {
         // Get the order details if the Novalnet transaction is alreay in the Novalnet database
         $novalnetOrderDetails = $this->transactionService->getTransactionData('tid', $this->parentTid);
+	$this->getLogger(__METHOD__)->error('Order Details 123', $novalnetOrderDetails);
         // Use the initial transaction details
         $novalnetOrderDetail = $novalnetOrderDetails[0];
         // If both the order number from Novalnet and in shop is missing, then something is wrong
