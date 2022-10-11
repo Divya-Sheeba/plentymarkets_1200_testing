@@ -151,7 +151,6 @@ class WebhookController extends Controller
         $this->eventTid  = $this->eventData['event']['tid'];
         // Retreiving the shop's order information based on the transaction
         $this->orderDetails = $this->getOrderDetails();
-	$this->getLogger(__METHOD__)->error('Order Details', $this->orderDetails);
         //  Get order language from the order object
         $this->orderLanguage = $this->getOrderLanguage($this->orderDetails);
         // Handle the individual webhook process
@@ -268,7 +267,6 @@ class WebhookController extends Controller
     {
         // Get the order details if the Novalnet transaction is alreay in the Novalnet database
         $novalnetOrderDetails = $this->transactionService->getTransactionData('tid', $this->parentTid);
-	$this->getLogger(__METHOD__)->error('Order Details 123', $novalnetOrderDetails);
         // Use the initial transaction details
         $novalnetOrderDetail = $novalnetOrderDetails[0];
 	$additionalInfo = json_decode($novalnetOrderDetail->additionalInfo, true);
@@ -278,13 +276,11 @@ class WebhookController extends Controller
         }
         // Get the Order No and proceed further
         $orderNo = !empty($novalnetOrderDetail->orderNo) ? $novalnetOrderDetail->orderNo : $this->eventData['transaction']['order_no'];
-	$this->getLogger(__METHOD__)->error('sss', $orderNo);
         // If the order in the Novalnet server to the order number in Novalnet database doesn't match, then there is an issue
         if(!empty($this->eventData['transaction']['order_no']) && !empty($novalnetOrderDetail->orderNo) && (($this->eventData['transaction']['order_no']) != $novalnetOrderDetail->orderNo)) {
             return $this->renderTemplate('Order reference not matching for the order number ' . $orderNo);
         }
         if(!empty($novalnetOrderDetail)) {
-		$this->getLogger(__METHOD__)->error('cal', $orderNo);
             $orderObj                     = pluginApp(stdClass::class);
             $orderObj->tid                = $this->parentTid;
             $orderObj->orderTotalAmount   = $novalnetOrderDetail->amount;
@@ -309,10 +305,8 @@ class WebhookController extends Controller
                 }
             }
         } else {
-	    $this->getLogger(__METHOD__)->error('No', $orderNo);
             if(!empty($orderNo)) {
                 $orderObj = $this->getOrderObject($orderNo);
-		$this->getLogger(__METHOD__)->error('obj', $orderObj);
                 // Handle the communication break
                 return $this->handleCommunicationBreak($orderObj);
             }
@@ -367,7 +361,7 @@ class WebhookController extends Controller
                 // Create the payment to the plenty order
                 $this->paymentHelper->createPlentyPayment($this->eventData);
                 // Webhook executed message
-                $webhookComments = $this->paymentHelper->getTranslatedText('nn_tid_label') . $this->eventData['transaction']['tid'];
+                $webhookComments = $this->paymentHelper->getTranslatedText('nn_tid') . $this->eventData['transaction']['tid'];
                 if(!empty($this->eventData['transaction']['test_mode'])) {
                     $webhookComments .= '<br>' . $this->paymentHelper->getTranslatedText('test_order') . $this->eventData['transaction']['test_mode'];
                 }
