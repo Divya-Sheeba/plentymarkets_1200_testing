@@ -167,7 +167,7 @@ class WebhookController extends Controller
                     $this->handleTransactionUpdate();
                     break;
                 case 'TRANSACTION_REFUND':
-                    $this->handleTransactionRefund();
+                    return $this->handleTransactionRefund();
                     break;
                 case 'CREDIT':
                     $this->handleTransactionCredit();
@@ -197,7 +197,7 @@ class WebhookController extends Controller
     public function renderTemplate($webhookMsg)
     {
 	$this->getLogger(__METHOD__)->error('webhook msg', $webhookMsg);
-        return $this->twig->render('Novalnet::webhook.NovalnetWebhook', ['webhookMsg' => $webhookMsg]);
+        return $this->twig->render('Novalnet::webhook.NovalnetWebhook', ['webhookMsg' => htmlentities($webhookMsg)]);
     }
 
     /**
