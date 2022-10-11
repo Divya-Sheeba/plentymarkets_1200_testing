@@ -157,28 +157,21 @@ class WebhookController extends Controller
         if($this->eventData['result']['status'] == 'SUCCESS') {
             switch($this->eventType) {
                 case 'PAYMENT':
-                    $this->renderTemplate('The Payment has been received');
-                    break;
+                    return $this->renderTemplate('The Payment has been received');
                 case 'TRANSACTION_CAPTURE':
                 case 'TRANSACTION_CANCEL':
-                    $this->handleTransactionCaptureCancel();
-                    break;
+                    return $this->handleTransactionCaptureCancel();
                 case 'TRANSACTION_UPDATE':
-                    $this->handleTransactionUpdate();
-                    break;
+                    return $this->handleTransactionUpdate();
                 case 'TRANSACTION_REFUND':
                     return $this->handleTransactionRefund();
-                    break;
                 case 'CREDIT':
-                    $this->handleTransactionCredit();
-                    break;
+                    return $this->handleTransactionCredit();
                 case 'CHARGEBACK':
-                    $this->handleChargeback();
-                    break;
+                    return $this->handleChargeback();
                 case 'PAYMENT_REMINDER':
                 case 'COLLECTION':
-                    $this->handlePaymentNotifications();
-                    break;
+                    return $this->handlePaymentNotifications();
                 default:
                     return $this->renderTemplate('The webhook notification has been received for the unhandled EVENT type ( ' . $this->eventType . ')' );
             }
@@ -196,7 +189,6 @@ class WebhookController extends Controller
      */
     public function renderTemplate($webhookMsg)
     {
-	$this->getLogger(__METHOD__)->error('webhook msg', $webhookMsg);
         return $this->twig->render('Novalnet::webhook.NovalnetWebhook', ['webhookMsg' => htmlentities($webhookMsg)]);
     }
 
@@ -493,8 +485,6 @@ class WebhookController extends Controller
             $this->eventData['bookingText'] = $webhookComments;
             // Create the payment to the plenty order
             $this->paymentHelper->createPlentyPayment($this->eventData);
-	    
-	    $webhookComments = 'The payment was refunded';
             return $this->renderTemplate($webhookComments);
         }
     }
