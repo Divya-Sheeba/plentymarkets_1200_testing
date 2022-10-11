@@ -124,7 +124,7 @@ class RefundEventProcedure
                     // Insert the refund details into Novalnet DB
                     $this->paymentService->insertPaymentResponse($paymentResponseData);
                     // Get refund status it is happened for Full amount or Partially
-                    $refundStatus = $this->paymentService->getRefundStatus($paymentResponseData['transaction']['order_no'], $paymentResponseData['transaction']['amount']);
+                    $refundStatus = $this->paymentService->getRefundStatus($paymentResponseData['transaction']['order_no'], $paymentResponseData['transaction']['amount'], $paymentResponseData['transaction']['refund']['amount']);
                     // Set the refund status it Partial or Full refund
                     $paymentResponseData['refund'] = $refundStatus;
                     if($order->typeId == OrderType::TYPE_CREDIT_NOTE) { // Create refund entry in credit note order
