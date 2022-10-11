@@ -271,6 +271,7 @@ class WebhookController extends Controller
 	$this->getLogger(__METHOD__)->error('Order Details 123', $novalnetOrderDetails);
         // Use the initial transaction details
         $novalnetOrderDetail = $novalnetOrderDetails[0];
+	$additionalInfo = json_decode($novalnetOrderDetail->additionalInfo, true);
         // If both the order number from Novalnet and in shop is missing, then something is wrong
         if(empty($novalnetOrderDetail->orderNo) && empty($this->eventData['transaction']['order_no'])) {
             return $this->renderTemplate('Order reference not found for the TID ' . $this->parentTid);
@@ -288,6 +289,7 @@ class WebhookController extends Controller
             $orderObj->orderPaidAmount    = 0; // Collect paid amount information from the novalnet DB
             $orderObj->orderNo            = $novalnetOrderDetail->orderNo;
             $orderObj->paymentName        = $novalnetOrderDetail->paymentName;
+	    $orderObj->currency	          = $additionalInfo['currency'];
             // Get the Novalnet payment methods Id
             $mop = $this->paymentHelper->getPaymentMethodByKey(strtoupper($novalnetOrderDetail->paymentName));
             $orderObj->mopId = $mop[0];
@@ -401,6 +403,8 @@ class WebhookController extends Controller
         if($this->eventType == 'TRANSACTION_CAPTURE') {
             $webhookComments = sprintf($this->paymentHelper->getTranslatedText('webhook_order_confirmation_text', $this->orderLanguage), date('d.m.Y'), date('H:i:s'));
         } else {
+	    $this->eventData['transaction']['amount'] = 0;
+	    $this->eventData['transaction']['currency'] = $this->orderDetails->currency;
             $webhookComments = sprintf($this->paymentHelper->getTranslatedText('webhook_transaction_cancellation', $this->orderLanguage), date('d.m.Y'), date('H:i:s'));
         }
         // Insert the updated transaction details into Novalnet DB
