@@ -278,11 +278,13 @@ class WebhookController extends Controller
         }
         // Get the Order No and proceed further
         $orderNo = !empty($novalnetOrderDetail->orderNo) ? $novalnetOrderDetail->orderNo : $this->eventData['transaction']['order_no'];
+	$this->getLogger(__METHOD__)->error('sss', $orderNo);
         // If the order in the Novalnet server to the order number in Novalnet database doesn't match, then there is an issue
         if(!empty($this->eventData['transaction']['order_no']) && !empty($novalnetOrderDetail->orderNo) && (($this->eventData['transaction']['order_no']) != $novalnetOrderDetail->orderNo)) {
             return $this->renderTemplate('Order reference not matching for the order number ' . $orderNo);
         }
         if(!empty($novalnetOrderDetail)) {
+		$this->getLogger(__METHOD__)->error('cal', $orderNo);
             $orderObj                     = pluginApp(stdClass::class);
             $orderObj->tid                = $this->parentTid;
             $orderObj->orderTotalAmount   = $novalnetOrderDetail->amount;
