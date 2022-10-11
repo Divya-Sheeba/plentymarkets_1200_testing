@@ -482,7 +482,7 @@ class WebhookController extends Controller
                 $webhookComments = sprintf($this->paymentHelper->getTranslatedText('webhook_new_tid_refund_execution', $this->orderLanguage), $this->parentTid, sprintf('%0.2f', ($this->eventData['transaction']['refund']['amount']/100)) , $this->eventData['transaction']['currency'], $this->eventTid);
             }
             // Get chargeback status it is happened for Full amount or Partially
-            $refundStatus = $this->paymentService->getRefundStatus($this->eventData['transaction']['order_no'], $this->orderDetails->orderTotalAmount);
+            $refundStatus = $this->paymentService->getRefundStatus($this->eventData['transaction']['order_no'], $this->orderDetails->orderTotalAmount, $this->eventData['transaction']['refund']['amount']);
             // Set the refund status it Partial or Full refund
             $this->eventData['refund'] = $refundStatus;
             // Insert the refund transaction details into Novalnet DB
@@ -541,7 +541,7 @@ class WebhookController extends Controller
         // Insert the refund details into Novalnet DB
         $this->paymentService->insertPaymentResponse($this->eventData, $this->parentTid, $RefundOrderTotalAmount, 0);
         // Get chargeback status it is happened for Full amount or Partially
-        $refundStatus = $this->paymentService->getRefundStatus($this->eventData['transaction']['order_no'], $this->orderDetails->orderTotalAmount);
+        $refundStatus = $this->paymentService->getRefundStatus($this->eventData['transaction']['order_no'], $this->orderDetails->orderTotalAmount, $this->eventData['transaction']['amount']);
         // Set the refund status it Partial or Full refund
         $this->eventData['refund'] = $refundStatus;
         // Booking Message
