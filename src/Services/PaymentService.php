@@ -426,15 +426,17 @@ class PaymentService
     public function performServerCall()
     {
         $paymentRequestData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
+	$paymentKey = $this->paymentHelper->getPaymentKey($paymentRequestData['paymentRequestData']['transaction']['payment_type']);
+	$nnDoRedirect = $this->sessionStorage->getPlugin()->getValue('nnDoRedirect');
         // Send the order no to Novalnet server if order is created initially
-        if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') == true) {
+        if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') == true || $this->isRedirectPayment($paymentKey) || !empty($nnDoRedirect)) {
             $paymentRequestData['paymentRequestData']['transaction']['order_no'] = $this->sessionStorage->getPlugin()->getValue('nnOrderNo');
         }
-        $paymentKey = $this->paymentHelper->getPaymentKey($paymentRequestData['paymentRequestData']['transaction']['payment_type']);
+        
         $privateKey = $this->settingsService->getPaymentSettingsValue('novalnet_private_key');
         $paymentResponseData = $this->paymentHelper->executeCurl($paymentRequestData['paymentRequestData'], $paymentRequestData['paymentUrl'], $privateKey);
         $isPaymentSuccess = isset($paymentResponseData['result']['status']) && $paymentResponseData['result']['status'] == 'SUCCESS';
-        $nnDoRedirect = $this->sessionStorage->getPlugin()->getValue('nnDoRedirect');
+        
         // Do redirect if the redirect URL is present
         if($isPaymentSuccess && ($this->isRedirectPayment($paymentKey) || !empty($nnDoRedirect))) {
             // Set the payment response in the session for the further processings
