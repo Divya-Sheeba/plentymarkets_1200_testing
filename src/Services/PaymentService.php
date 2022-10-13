@@ -609,6 +609,7 @@ class PaymentService
      */
     public function getAdditionalPaymentInfo($paymentResponseData)
     {
+	    $this->getLogger(__METHOD__)->error('responseData', $paymentResponseData);
         $lang = !empty($paymentResponseData['custom']['lang']) ? strtolower((string)$paymentResponseData['custom']['lang']) : $paymentResponseData['lang'];
         // Add the extra information for the further processing
         $additionalInfo = [
@@ -961,6 +962,7 @@ class PaymentService
      */
     public function getStoreInformation($transactionData)
     {
+	$this->getLogger(__METHOD__)->error('store info', $transactionData);
         $cashpaymentComments  = PHP_EOL . $this->paymentHelper->getTranslatedText('cashpayment_expire_date') . $transactionData['cp_due_date'];
         $cashpaymentComments .= PHP_EOL . $this->paymentHelper->getTranslatedText('cashpayment_stores_near_you');
         // We loop in each of them to print those store details
