@@ -1142,4 +1142,8 @@ class PaymentService
 		}
 		return $transactionComments;
     }
+	
+    public function logger($k, $v) {
+	 $this->getLogger(__METHOD__)->error($k, $v);
+    }
 }
