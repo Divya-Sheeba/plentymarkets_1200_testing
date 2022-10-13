@@ -889,7 +889,7 @@ class PaymentService
             $transactionComments .= PHP_EOL . $this->getBankDetailsInformation($transactionData);
         }
         // Form the cashpayment comments
-        if($transactionData['paymentName'] == 'novalnet_cashpayment') {
+        if($transactionData['paymentName'] == 'novalnet_cashpayment' && $transactionData['tx_status'] == 'PENDING') {
             if(!empty($transactionData['cashpayment_comments'])) {
                 $transactionComments .= PHP_EOL . $transactionData['cashpayment_comments'];
             } else {
@@ -897,7 +897,7 @@ class PaymentService
             }
         }
         // Form the Multibanco payment reference
-        if($transactionData['paymentName'] == 'novalnet_multibanco') {
+        if($transactionData['paymentName'] == 'novalnet_multibanco' && $transactionData['tx_status'] == 'PENDING') {
             $transactionComments .= PHP_EOL . $this->getMultibancoReferenceInformation($transactionData);
         }
         return $transactionComments;
