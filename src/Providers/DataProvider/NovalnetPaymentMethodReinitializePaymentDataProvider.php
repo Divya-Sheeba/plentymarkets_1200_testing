@@ -44,9 +44,11 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
                 $mopId = $orderProperty['value'];
             }
         }
-        // Get the Novalnet payment key and MOP Id
+        // Get the payment details from database
         $transactionDetails = $paymentService->getDetailsFromPaymentProperty($order['id']);
-
+	// Get the payment method key
+	$paymentKey = $paymentHelper->getPaymentKeyByMop($mopId);
+		
         // Build the payment request paramters
         if(!empty($basketRepository->load())) {
             // Assign the billing and shipping address Id
@@ -68,14 +70,14 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
             $sessionStorage->getPlugin()->setValue('nnOrderNo', $order['id']);
 
             // Build the payment request parameters
-            $paymentRequestData = $paymentService->generatePaymentParams($basketRepository->load(), strtoupper($transactionDetails['paymentName']), $invoiceAmount);
+            $paymentRequestData = $paymentService->generatePaymentParams($basketRepository->load(), $paymentKey, $invoiceAmount);
 
             // Set the payment request parameters into session
             $sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
 
             // Get the Credit card form loading parameters
-            if ($transactionDetails['paymentName'] == 'novalnet_cc') {
-                 $ccFormDetails = $paymentService->getCreditCardAuthenticationCallData($basketRepository->load(), $transactionDetails['paymentName'], $invoiceAmount);
+            if ($paymentKey == 'NOVALNET_CC') {
+                 $ccFormDetails = $paymentService->getCreditCardAuthenticationCallData($basketRepository->load(), strtolower($paymentKey), $invoiceAmount);
                  $ccCustomFields = $paymentService->getCcFormFields();
             }
 
@@ -84,15 +86,15 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
         }
 
         // If the Novalnet payments are rejected do the reinitialize payment
-        if(strpos($transactionDetails['paymentName'], 'novalnet') !== false && ((!empty($transactionDetails['tx_status']) && !in_array($transactionDetails['tx_status'], ['PENDING', 'ON_HOLD', 'CONFIRMED', 'DEACTIVATED'])) || empty($transactionDetails['tx_status']))) {
+        if(strpos($paymentKey, 'NOVALNET') !== false && ((!empty($transactionDetails['tx_status']) && !in_array($transactionDetails['tx_status'], ['PENDING', 'ON_HOLD', 'CONFIRMED', 'DEACTIVATED'])) || empty($transactionDetails['tx_status']))) {
             return $twig->render('Novalnet::NovalnetPaymentMethodReinitializePaymentDataProvider',
                                         [
                                             'order' => $order,
                                             'paymentMethodId' => $mopId,
-                                            'paymentMopKey' => strtoupper($transactionDetails['paymentName']),
+                                            'paymentMopKey' => $paymentKey,
                                             'reinitializePayment' => 1,
                                             'nnPaymentProcessUrl' => $paymentService->getProcessPaymentUrl(),
-                                            'paymentName' => $paymentHelper->getCustomizedTranslatedText('template_' . $transactionDetails['paymentName']),
+                                            'paymentName' => $paymentHelper->getCustomizedTranslatedText('template_' . strtolower($paymentKey)),
                                             'ccFormDetails' => !empty($ccFormDetails) ? $ccFormDetails : '',
                                             'ccCustomFields' => !empty($ccCustomFields) ? $ccCustomFields : '',
                                             'showBirthday' => $showBirthday,
