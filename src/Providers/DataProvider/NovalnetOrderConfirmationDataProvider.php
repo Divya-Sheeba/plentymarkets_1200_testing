@@ -96,7 +96,8 @@ class NovalnetOrderConfirmationDataProvider
                                     [
                                         'transactionComments' => html_entity_decode($transactionComment),
                                         'cashpaymentToken' => $cashpaymentToken,
-                                        'cashpaymentUrl' => $cashpaymentUrl
+                                        'cashpaymentUrl' => $cashpaymentUrl,
+                                        'txStatus' => $nnDbTxDetails['tx_status']
                                     ]);
     }
 }
