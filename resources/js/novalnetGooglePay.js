@@ -43,6 +43,7 @@ jQuery(document).ready(function() {
                         if(response.result.status == "SUCCESS") {
                             console.log(response);
                             jQuery('#nn_google_pay_token').val(response.transaction.token);
+                             jQuery('#nn_google_pay_do_redirect').val(response.transaction.doRedirect);                               
                             jQuery('#nn_google_pay_form').submit();
                         } else {
                             // Upon failure, displaying the error text
