@@ -399,6 +399,11 @@ class PaymentHelper
             /** @var Payment $payment */
             $payment = pluginApp(\Plenty\Modules\Payment\Models\Payment::class);
             $paymentResponseData['result']['status'] = $paymentResponseData['result']['status'] ?? $paymentResponseData['status'];
+	    // Get the Novalnet payment method Id if it is missing in the response
+            if(empty($paymentResponseData['mop'])) {
+                $paymentMethodDetail = $this->getPaymentMethodByKey($paymentResponseData['transaction']['payment_type']);
+                $paymentResponseData['mop'] = $paymentMethodDetail[0];
+            }
             $payment->mopId           = (int) $paymentResponseData['mop'];
             $payment->transactionType = Payment::TRANSACTION_TYPE_BOOKED_POSTING;
             $payment->status          = ($paymentResponseData['transaction']['status'] == 'ON_HOLD' || ($paymentResponseData['transaction']['status'] == 'PENDING' && !in_array($paymentResponseData['transaction']['payment_type'], ['INVOICE', 'PREPAYMENT', 'CASHPAYMENT', 'MULTIBANCO']))) ? Payment::STATUS_AWAITING_APPROVAL : (($paymentResponseData['result']['status'] == 'FAILURE' || $paymentResponseData['transaction']['status'] == 'DEACTIVATED') ? Payment::STATUS_CANCELED : Payment::STATUS_CAPTURED);
