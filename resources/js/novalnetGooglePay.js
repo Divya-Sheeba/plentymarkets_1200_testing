@@ -61,19 +61,21 @@ jQuery(document).ready(function() {
             var mopId = jQuery('#nn_google_pay_mop').val();
             if(displayGooglePayButton) {
                 // Display the Google Pay payment
-                if(jQuery('input[type="radio"][id*='+mopId+']').is(':checked')) {
-                    jQuery('li[data-id="'+mopId+'"]').click();
-                } else {
-                    jQuery('.widget-place-order').children('div').show();
-                }
                 jQuery('li[data-id="'+mopId+'"]').show();
                 jQuery('li[data-id="'+mopId+'"]').click(function() {
-                    if( jQuery('.gpay-card-info-container-fill').length == 0 ) {
+                    if(jQuery('.gpay-card-info-container-fill').length == 0) {
                         // Initiating the payment request for the wallet payment
                         NovalnetWalletPaymentObj.addPaymentButton("#nn_google_pay");
                         jQuery('.widget-place-order').children('div').hide();
                     }
                 });
+                
+                if(jQuery('input[type="radio"][id*='+mopId+']').is(':checked')) {
+                    jQuery('li[data-id="'+mopId+'"]').click();
+                } else {
+                    jQuery('.widget-place-order').children('div').show();
+                    jQuery('.gpay-card-info-container-fill').hide();
+                }
             } else {
                 // Hide the Google Pay payment if it is not possible
                 jQuery('li[data-id="'+mopId+'"]').hide();
