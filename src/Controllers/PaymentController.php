@@ -165,6 +165,7 @@ class PaymentController extends Controller
         }
         if(!empty($paymentRequestPostData['nn_cc3d_redirect']) || !empty($paymentRequestPostData['nn_google_pay_do_redirect'])) {
              $paymentRequestData['paymentRequestData']['transaction']['return_url'] = $this->paymentService->getReturnPageUrl();
+             $this->sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
              return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/place-order');
         }
         // Set the payment requests in the session for the further processings
