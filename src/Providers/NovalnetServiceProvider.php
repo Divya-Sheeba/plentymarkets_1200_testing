@@ -228,14 +228,16 @@ class NovalnetServiceProvider extends ServiceProvider
                     $sessionStorage->getPlugin()->setValue('mop',$event->getMop());
                     $sessionStorage->getPlugin()->setValue('paymentkey', $paymentKey);
                     $nnDoRedirect = $sessionStorage->getPlugin()->getValue('nnDoRedirect');
-                    if($settingsService->getPaymentSettingsValue('novalnet_order_creation') == true || $paymentService->isRedirectPayment($paymentKey) || !empty($nnDoRedirect)) {
+                    $nnGooglePayDoRedirect = $sessionStorage->getPlugin()->getValue('nnGooglePayDoRedirect');
+                    if($settingsService->getPaymentSettingsValue('novalnet_order_creation') == true || $paymentService->isRedirectPayment($paymentKey) || !empty($nnDoRedirect) || !empty($nnGooglePayDoRedirect)) {
                         $paymentResponseData = $paymentService->performServerCall();
                        
-                        if($paymentService->isRedirectPayment($paymentKey) || !empty($nnDoRedirect)) {
+                        if($paymentService->isRedirectPayment($paymentKey) || !empty($nnDoRedirect) || !empty($nnGooglePayDoRedirect)) {
                             if(!empty($paymentResponseData) && !empty($paymentResponseData['result']['redirect_url']) && !empty($paymentResponseData['transaction']['txn_secret'])) {
                                 // Transaction secret used for the later checksum verification
                                 $sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
                                 $sessionStorage->getPlugin()->setValue('nnDoRedirect', null);
+                                $sessionStorage->getPlugin()->setValue('nnGooglePayDoRedirect', null);
                                 $event->setType('redirectUrl');
                                 $event->setValue($paymentResponseData['result']['redirect_url']);
                             } else {
