@@ -156,18 +156,16 @@ class PaymentController extends Controller
             ];
             // Set the Do redirect value into session for the redirection
             $this->sessionStorage->getPlugin()->setValue('nnDoRedirect', $paymentRequestPostData['nn_cc3d_redirect']);
-            if(!empty($paymentRequestPostData['nn_cc3d_redirect'])) {
-                $paymentRequestData['paymentRequestData']['transaction']['return_url'] = $this->paymentService->getReturnPageUrl();
-            }
         }
         // Setting up the wallet token for the Google pay payment
         if($paymentRequestPostData['nn_payment_key'] == 'NOVALNET_GOOGLEPAY') {
             $paymentRequestData['paymentRequestData']['transaction']['payment_data'] = ['wallet_token'  => $paymentRequestPostData['nn_google_pay_token']];
             // Set the Do redirect value into session for the Google Pay redirection
             $this->sessionStorage->getPlugin()->setValue('nnGooglePayDoRedirect', $paymentRequestPostData['nn_google_pay_do_redirect']);
-            if(!empty($paymentRequestPostData['nn_google_pay_do_redirect'])) {
-                $paymentRequestData['paymentRequestData']['transaction']['return_url'] = $this->paymentService->getReturnPageUrl();
-            }
+        }
+        if(!empty($paymentRequestPostData['nn_cc3d_redirect']) || !empty($paymentRequestPostData['nn_google_pay_do_redirect'])) {
+             $paymentRequestData['paymentRequestData']['transaction']['return_url'] = $this->paymentService->getReturnPageUrl();
+             return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/place-order');
         }
         // Set the payment requests in the session for the further processings
         $this->sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
