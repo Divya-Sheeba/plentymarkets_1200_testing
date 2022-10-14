@@ -429,7 +429,7 @@ class PaymentService
 	$paymentKey = $this->paymentHelper->getPaymentKey($paymentRequestData['paymentRequestData']['transaction']['payment_type']);
 	$nnDoRedirect = $this->sessionStorage->getPlugin()->getValue('nnDoRedirect');
         $nnOrderCreator = $this->sessionStorage->getPlugin()->getValue('nnOrderCreator');
-	$nnGooglePayDoRedirect = $sessionStorage->getPlugin()->getValue('nnGooglePayDoRedirect');
+	$nnGooglePayDoRedirect = $this->sessionStorage->getPlugin()->getValue('nnGooglePayDoRedirect');
         // Send the order no to Novalnet server if order is created initially
         if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') == true || $this->isRedirectPayment($paymentKey) || !empty($nnDoRedirect) || !empty($nnOrderCreator) || !empty($nnGooglePayDoRedirect)) {
             $paymentRequestData['paymentRequestData']['transaction']['order_no'] = $this->sessionStorage->getPlugin()->getValue('nnOrderNo');
