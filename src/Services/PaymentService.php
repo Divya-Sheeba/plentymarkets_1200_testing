@@ -429,8 +429,9 @@ class PaymentService
 	$paymentKey = $this->paymentHelper->getPaymentKey($paymentRequestData['paymentRequestData']['transaction']['payment_type']);
 	$nnDoRedirect = $this->sessionStorage->getPlugin()->getValue('nnDoRedirect');
         $nnOrderCreator = $this->sessionStorage->getPlugin()->getValue('nnOrderCreator');
+	$nnGooglePayDoRedirect = $sessionStorage->getPlugin()->getValue('nnGooglePayDoRedirect');
         // Send the order no to Novalnet server if order is created initially
-        if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') == true || $this->isRedirectPayment($paymentKey) || !empty($nnDoRedirect) || !empty($nnOrderCreator)) {
+        if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') == true || $this->isRedirectPayment($paymentKey) || !empty($nnDoRedirect) || !empty($nnOrderCreator) || !empty($nnGooglePayDoRedirect)) {
             $paymentRequestData['paymentRequestData']['transaction']['order_no'] = $this->sessionStorage->getPlugin()->getValue('nnOrderNo');
         }
         
@@ -439,7 +440,7 @@ class PaymentService
         $isPaymentSuccess = isset($paymentResponseData['result']['status']) && $paymentResponseData['result']['status'] == 'SUCCESS';
         
         // Do redirect if the redirect URL is present
-        if($isPaymentSuccess && ($this->isRedirectPayment($paymentKey) || !empty($nnDoRedirect))) {
+        if($isPaymentSuccess && ($this->isRedirectPayment($paymentKey) || !empty($nnDoRedirect) || !empty($nnGooglePayDoRedirect))) {
             // Set the payment response in the session for the further processings
             $this->sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData['paymentRequestData']);
             return $paymentResponseData;
