@@ -200,6 +200,14 @@ class PaymentService
         // Get the customer billing and shipping details
         $billingAddressId = $basket->customerInvoiceAddressId;
         $shippingAddressId = $basket->customerShippingAddressId;
+	
+	// Get the billing and shipping address Id from session during the reinititiate payment process
+	if(empty($billingAddressId)) {
+		$billingAddressId = $this->sessionStorage->getPlugin()->getValue('nnBillingAddressId');	
+	}
+	if(empty($shippingAddressId)) {
+		$shippingAddressId = $this->sessionStorage->getPlugin()->getValue('nnShippingAddressId');
+	}
         $billingAddress = $this->paymentHelper->getCustomerAddress((int) $billingAddressId);
         $shippingAddress = $billingAddress;
         if(!empty($shippingAddressId)) {
@@ -760,13 +768,22 @@ class PaymentService
      */
     public function getCreditCardAuthenticationCallData(Basket $basket, $paymentKey, $orderAmount = 0)
     {
-        // Get the customer billing and shipping details
-		$billingAddress = $this->paymentHelper->getCustomerAddress((int) $basket->customerInvoiceAddressId);
-        if(!empty($basket->customerShippingAddressId)) {
-            $shippingAddress = $this->paymentHelper->getCustomerAddress((int) $basket->customerShippingAddressId);
-        } else {
-			$shippingAddress = $billingAddress;
-		}
+         // Get the customer billing and shipping details
+        $billingAddressId = $basket->customerInvoiceAddressId;
+        $shippingAddressId = $basket->customerShippingAddressId;
+	
+	// Get the billing and shipping address Id from session during the reinititiate payment process
+	if(empty($billingAddressId)) {
+		$billingAddressId = $this->sessionStorage->getPlugin()->getValue('nnBillingAddressId');	
+	}
+	if(empty($shippingAddressId)) {
+		$shippingAddressId = $this->sessionStorage->getPlugin()->getValue('nnShippingAddressId');
+	}
+        $billingAddress = $this->paymentHelper->getCustomerAddress((int) $billingAddressId);
+        $shippingAddress = $billingAddress;
+        if(!empty($shippingAddressId)) {
+            $shippingAddress = $this->paymentHelper->getCustomerAddress((int) $shippingAddressId);
+        }
         // Get the customer name if the salutation as Person
         $customerName = $this->getCustomerName($billingAddress);
         /** @var \Plenty\Modules\Frontend\Services\VatService $vatService */
