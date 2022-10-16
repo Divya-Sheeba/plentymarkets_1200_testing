@@ -90,7 +90,7 @@ class NovalnetOrderConfirmationDataProvider
 
         // Replace PHP_EOL as break tag for the alignment
         $transactionComment = str_replace(PHP_EOL, '<br>', $transactionComment);
-
+         $paymentService->logger('comment', $transactionComments);
         // Render the transaction comments
         return $twig->render('Novalnet::NovalnetOrderConfirmationDataProvider',
                                     [
