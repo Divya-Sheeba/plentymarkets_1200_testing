@@ -69,6 +69,8 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
             // Set the required values into session
             $sessionStorage->getPlugin()->setValue('nnOrderNo', $order['id']);
             $sessionStorage->getPlugin()->setValue('nnOrderCreator', $order['ownerId']);
+	    $sessionStorage->getPlugin()->setValue('nnBillingAddressId', $order['billingAddress']['id']);
+	    $sessionStorage->getPlugin()->setValue('nnShippingAddressId', $order['deliveryAddress']['id']);
 
             // Build the payment request parameters
             $paymentRequestData = $paymentService->generatePaymentParams($basketRepository->load(), $paymentKey, $invoiceAmount);
