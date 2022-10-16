@@ -884,6 +884,7 @@ class PaymentService
      */
     public function formTransactionComments($transactionData)
     {
+	    $this->getLogger(__METHOD__)->error('tx details', $transactionData);
         $transactionComments = '';
         // Display the Novalnet transaction Id
         if(!empty($transactionData['tid'])) {
