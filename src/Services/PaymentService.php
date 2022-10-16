@@ -457,7 +457,7 @@ class PaymentService
             if($isPaymentSuccess) {
                 $this->pushNotification($paymentResponseData['result']['status_text'], 'success', 100);
             } else {
-                    if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) {
+                    if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true && empty($nnOrderCreator)) {
                         return $paymentResponseData;
                     }
                     $this->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);
@@ -607,7 +607,7 @@ class PaymentService
 			'payment_name'     => $paymentResponseData['payment_method'],
 			'additional_info'  => $additionalInfo ?? 0,
 		];
-        if($transactionData['payment_name'] == 'NOVALNET_INVOICE' || $paymentResponseData['result']['status'] != 'SUCCESS') {
+        if(in_array($transactionData['payment_name'], ['NOVALNET_INVOICE', 'NOVALNET_PREPAYMENT', 'NOVALNET_MULTIBANCO']) ||  (in_array($transactionData['payment_name'], ['NOVALNET_PAYPAL', 'NOALNET_PRZELEWY24']) && in_array($paymentResponseData['transaction']['status'], ['PENDING', 'ON_HOLD'])) || $paymentResponseData['result']['status'] != 'SUCCESS') {
             $transactionData['callback_amount'] = 0;
         }
         $this->transactionService->saveTransaction($transactionData);
