@@ -399,9 +399,9 @@ class PaymentHelper
             /** @var Payment $payment */
             $payment = pluginApp(\Plenty\Modules\Payment\Models\Payment::class);
             $paymentResponseData['result']['status'] = $paymentResponseData['result']['status'] ?? $paymentResponseData['status'];
-	    // Get the Novalnet payment method Id if it is missing in the response
+            // Get the Novalnet payment method Id if it is missing in the response
             if(empty($paymentResponseData['mop'])) {
-                $paymentMethodDetail = $this->getPaymentMethodByKey($paymentResponseData['transaction']['payment_type']);
+                $paymentMethodDetail = $this->getPaymentMethodByKey($this->getPaymentKey($paymentResponseData['transaction']['payment_type']));
                 $paymentResponseData['mop'] = $paymentMethodDetail[0];
             }
             $payment->mopId           = (int) $paymentResponseData['mop'];
