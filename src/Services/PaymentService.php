@@ -708,7 +708,10 @@ class PaymentService
                     $minimumGuaranteedAmount = !empty($configuredMinimumGuaranteedAmount) ? $configuredMinimumGuaranteedAmount : 999;
                     // Get the basket total amount
                     $basketAmount = !empty($basket->basketAmount) ? $this->paymentHelper->convertAmountToSmallerUnit($basket->basketAmount) : 0;
-                    // First, we check the billing and shipping addresses are matched
+                    $this->getLogger(__METHOD__)->error('bill Ship', $billingShippingDetails);
+		    $this->getLogger(__METHOD__)->error('Min amount', $minimumGuaranteedAmount);
+		    $this->getLogger(__METHOD__)->error('nas', $basket);
+		    // First, we check the billing and shipping addresses are matched
                     // Second, we check the customer from the guaranteed payments supported countries
                     // Third, we check if the supported currency is selected
                     // Finally, we check if the minimum order amount configured to process the payment method. By default, the minimum order amount is 999 cents
