@@ -123,7 +123,7 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
                                             'orderAmount' => $invoiceAmount,
 					    'orderLang'   => $paymentRequestData['paymentRequestData']['custom']['lang'],
 					    'countryCode' => $paymentRequestData['paymentRequestData']['customer']['billing']['country_code'],
-					    'orderCurrency'  => $basket->currency,
+					    'orderCurrency'  => $basketRepository->currency,
 				            'googlePayData' => !empty($googlePayData) ? $googlePayData : ''
 										]);
         } else {
