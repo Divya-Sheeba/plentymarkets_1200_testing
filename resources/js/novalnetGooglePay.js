@@ -83,11 +83,15 @@ jQuery(document).ready(function() {
             
              
             jQuery('.method-list-item').on('click',function() {
-                var clickedId = $(this).attr('data-id');
+                var clickedId = jQuery(this).attr('data-id');
                 if( clickedId !== undefined && clickedId != mopId ) {
+                    jQuery("#nn_google_pay").hide();  
                     jQuery('.widget-place-order').children('div').show();
-            }
-});
+               } else {
+                    jQuery("#nn_google_pay").show();                    
+                    jQuery('.widget-place-order').children('div').hide();
+               }
+            });
         });
     } catch (e) {
         // Handling the errors from the payment intent setup
