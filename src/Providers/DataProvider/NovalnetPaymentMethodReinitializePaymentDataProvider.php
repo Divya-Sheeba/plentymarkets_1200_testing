@@ -13,6 +13,8 @@ use Novalnet\Services\PaymentService;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
 use Novalnet\Helper\PaymentHelper;
+use Novalnet\Services\SettingsService;
+use Plenty\Modules\Helper\Services\WebstoreHelper;
 
 /**
  * Class NovalnetPaymentMethodReinitializePaymentDataProvider
@@ -29,13 +31,15 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
      *
      * @return string
      */
-    public function call(Twig $twig, $arg)
+    public function call(Twig $twig, WebstoreHelper $webstoreHelper, $arg)
     {
         $order = $arg[0];
         $paymentService     = pluginApp(PaymentService::class);
         $basketRepository   = pluginApp(BasketRepositoryContract::class);
         $sessionStorage     = pluginApp(FrontendSessionStorageFactoryContract::class);
         $paymentHelper      = pluginApp(PaymentHelper::class);
+	$settingsService    = pluginApp(SettingsService::class);
+	
         $paymentService->logger('order', $order);
         // Get the Novalnet payment method Id
         foreach($order['properties'] as $orderProperty) {
@@ -83,7 +87,29 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
                  $ccFormDetails = $paymentService->getCreditCardAuthenticationCallData($basketRepository->load(), strtolower($paymentKey), $invoiceAmount);
                  $ccCustomFields = $paymentService->getCcFormFields();
             }
-
+	    
+	   // Required details for the Google Pay button
+	   if ($paymentKey == 'NOVALNET_GOOGLEPAY') {
+		   // Get the seller name from the shop configuaration
+        	   $sellerName = $settingsService->getPaymentSettingsValue('business_name', 'novalnet_googlepay');
+		   
+		   $googlePayData = [
+			    'clientKey'           => trim($settingsService->getPaymentSettingsValue('novalnet_client_key')),
+			    'merchantId'          => $settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay'),
+			    'sellerName'          => !empty($sellerName) ? $sellerName : $webstoreHelper->getCurrentWebstoreConfiguration()->name,
+			    'enforce'             => $settingsService->getPaymentSettingsValue('enforce', 'novalnet_googlepay'),
+			    'buttonType'          => $settingsService->getPaymentSettingsValue('button_type', 'novalnet_googlepay'),
+			    'buttonTheme'         => $settingsService->getPaymentSettingsValue('button_theme', 'novalnet_googlepay'),
+			    'buttonHeight'        => $settingsService->getPaymentSettingsValue('button_height', 'novalnet_googlepay'),
+			    'testMode'            => ($settingsService->getPaymentSettingsValue('test_mode', 'novalnet_googlepay') == true) ? 'SANDBOX' : 'PRODUCTION',
+			    'mopId'               => $mopId,
+			    'countryCode'         => $paymentRequestData['paymentRequestData']['customer']['billing']['country_code'],
+			    'orderTotalAmount'    => $invoiceAmount,
+			    'orderLang'           => $paymentRequestData['paymentRequestData']['custom']['lang'],
+			    'orderCurrency'       => $basket->currency,
+			    'nnPaymentProcessUrl' => $paymentService->getProcessPaymentUrl()
+			 ];
+	   }
             // Check if the birthday field needs to show for guaranteed payments
             $showBirthday = ((!isset($paymentRequestData['paymentRequestData']['customer']['billing']['company']) && !isset($paymentRequestData['paymentRequestData']['customer']['birth_date'])) ||  (isset($paymentRequestData['paymentRequestData']['customer']['birth_date']) && time() < strtotime('+18 years', strtotime($paymentRequestData['paymentRequestData']['customer']['birth_date'])))) ? true : false;
         }
@@ -101,7 +127,8 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
                                             'ccFormDetails' => !empty($ccFormDetails) ? $ccFormDetails : '',
                                             'ccCustomFields' => !empty($ccCustomFields) ? $ccCustomFields : '',
                                             'showBirthday' => $showBirthday,
-                                            'orderAmount' => $invoiceAmount
+                                            'orderAmount' => $invoiceAmount,
+				            'googlePayData' => !empty($googlePayData) ? $googlePayData : ''
 										]);
         } else {
             return '';
