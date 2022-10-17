@@ -80,6 +80,14 @@ jQuery(document).ready(function() {
                 // Hide the Google Pay payment if it is not possible
                 jQuery('li[data-id="'+mopId+'"]').hide();
             }
+            
+             
+            jQuery('.method-list-item').on('click',function() {
+                var clickedId = $(this).attr('data-id');
+                if( clickedId !== undefined && clickedId != mopId ) {
+                    jQuery('.widget-place-order').children('div').show();
+            }
+});
         });
     } catch (e) {
         // Handling the errors from the payment intent setup
