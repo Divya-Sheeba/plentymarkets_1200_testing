@@ -92,7 +92,6 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
 	   if ($paymentKey == 'NOVALNET_GOOGLEPAY') {
 		   // Get the seller name from the shop configuaration
         	   $sellerName = $settingsService->getPaymentSettingsValue('business_name', 'novalnet_googlepay');
-		   
 		   $googlePayData = [
 			    'clientKey'           => trim($settingsService->getPaymentSettingsValue('novalnet_client_key')),
 			    'merchantId'          => $settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay'),
@@ -101,13 +100,7 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
 			    'buttonType'          => $settingsService->getPaymentSettingsValue('button_type', 'novalnet_googlepay'),
 			    'buttonTheme'         => $settingsService->getPaymentSettingsValue('button_theme', 'novalnet_googlepay'),
 			    'buttonHeight'        => $settingsService->getPaymentSettingsValue('button_height', 'novalnet_googlepay'),
-			    'testMode'            => ($settingsService->getPaymentSettingsValue('test_mode', 'novalnet_googlepay') == true) ? 'SANDBOX' : 'PRODUCTION',
-			    'mopId'               => $mopId,
-			    'countryCode'         => $paymentRequestData['paymentRequestData']['customer']['billing']['country_code'],
-			    'orderTotalAmount'    => $invoiceAmount,
-			    'orderLang'           => $paymentRequestData['paymentRequestData']['custom']['lang'],
-			    'orderCurrency'       => $basket->currency,
-			    'nnPaymentProcessUrl' => $paymentService->getProcessPaymentUrl()
+			    'testMode'            => ($settingsService->getPaymentSettingsValue('test_mode', 'novalnet_googlepay') == true) ? 'SANDBOX' : 'PRODUCTION'
 			 ];
 	   }
             // Check if the birthday field needs to show for guaranteed payments
@@ -128,6 +121,9 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
                                             'ccCustomFields' => !empty($ccCustomFields) ? $ccCustomFields : '',
                                             'showBirthday' => $showBirthday,
                                             'orderAmount' => $invoiceAmount,
+					    'orderLang'   => $paymentRequestData['paymentRequestData']['custom']['lang'],
+					    'countryCode' => $paymentRequestData['paymentRequestData']['customer']['billing']['country_code'],
+					    'orderCurrency'  => $basket->currency,
 				            'googlePayData' => !empty($googlePayData) ? $googlePayData : ''
 										]);
         } else {
