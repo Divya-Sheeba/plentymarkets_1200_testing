@@ -60,7 +60,8 @@ class NovalnetGooglePayButtonDataProvider
         $billingAddress = $paymentHelper->getCustomerAddress((int) $basket->customerInvoiceAddressId);
         // Get the seller name from the shop configuaration
         $sellerName = $settingsService->getPaymentSettingsValue('business_name', 'novalnet_googlepay');
-        
+        $name = $webstoreHelper->getCurrentWebstoreConfiguration()->name;
+        $paymentService->logger('store', $name);
         // Required details for the Google Pay button
         $googlePayData = [
                             'clientKey'           => trim($settingsService->getPaymentSettingsValue('novalnet_client_key')),
