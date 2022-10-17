@@ -70,17 +70,17 @@ class NovalnetGooglePayButtonDataProvider
                             'buttonType'          => $settingsService->getPaymentSettingsValue('button_type', 'novalnet_googlepay'),
                             'buttonTheme'         => $settingsService->getPaymentSettingsValue('button_theme', 'novalnet_googlepay'),
                             'buttonHeight'        => $settingsService->getPaymentSettingsValue('button_height', 'novalnet_googlepay'),
-                            'testMode'            => ($settingsService->getPaymentSettingsValue('test_mode', 'novalnet_googlepay') == true) ? 'SANDBOX' : 'PRODUCTION',
-                            'mopId'               => $paymentMethodDetails[0],
-                            'countryCode'         => $countryRepository->findIsoCode($billingAddress->countryId, 'iso_code_2'),
-                            'orderTotalAmount'    => $orderAmount,
-                            'orderLang'           => $orderLang,
-                            'orderCurrency'       => $basket->currency,
-                            'nnPaymentProcessUrl' => $paymentService->getProcessPaymentUrl()
+                            'testMode'            => ($settingsService->getPaymentSettingsValue('test_mode', 'novalnet_googlepay') == true) ? 'SANDBOX' : 'PRODUCTION'
                          ];
         // Render the Google Pay button
        return $twig->render('Novalnet::PaymentForm.NovalnetGooglePayButton',
                                     [
+                                        'paymentMethodId' => $paymentMethodDetails[0],
+                                        'nnPaymentProcessUrl' => $paymentService->getProcessPaymentUrl(),
+                                        'orderLang'           => $orderLang,
+                                        'orderCurrency'       => $basket->currency,
+                                        'countryCode'         => $countryRepository->findIsoCode($billingAddress->countryId, 'iso_code_2'),
+                                        'orderAmount'         => $orderAmount,
                                         'googlePayData' => $googlePayData
                                     ]);
     }
