@@ -124,10 +124,11 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
                                             'customData' => !empty($ccCustomFields) ? $ccCustomFields : '',
                                             'showBirthday' => $showBirthday,
                                             'orderAmount' => $invoiceAmount,
-					    'orderLang'   => $paymentRequestData['paymentRequestData']['custom']['lang'],
+					    'redirectPayment' => $paymentService->isRedirectPayment($paymentKey),
+					    'orderLang'   => $paymentRequestD$paymentService->isRedirectPayment($paymentKey, false),ta['paymentRequestData']['custom']['lang'],
 					    'countryCode' => $paymentRequestData['paymentRequestData']['customer']['billing']['country_code'],
 					    'orderCurrency'  => $basketRepository->load()->currency,
-					 'googlePayData' => !empty($googlePayData) ? $googlePayData : ''
+					    'googlePayData' => !empty($googlePayData) ? $googlePayData : ''
 										]);
         } else {
             return '';
