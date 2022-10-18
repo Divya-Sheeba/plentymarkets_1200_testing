@@ -30,6 +30,11 @@
             jQuery("[id^='nnReinitPaymentMethod-']").hide();
             jQuery('#novalnetPaymentForm').show();
         });
+        
+        {# Call the redirect payment methods #}
+        jQuery('#nn_redirect_payment_process').click(function() {
+            window.location.href = jQuery('#nn_redirect_url').val();
+        });
 
     });
 function iOS() {
