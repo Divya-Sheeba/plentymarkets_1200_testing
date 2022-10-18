@@ -122,8 +122,7 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
                                             'transactionData' => !empty($ccFormDetails) ? $ccFormDetails : '',
                                             'customData' => !empty($ccCustomFields) ? $ccCustomFields : '',
                                             'showBirthday' => $showBirthday,
-                                            'orderAmo
-					    unt' => $invoiceAmount,
+                                            'orderAmount' => $invoiceAmount,
 					    'orderLang'   => $paymentRequestData['paymentRequestData']['custom']['lang'],
 					    'countryCode' => $paymentRequestData['paymentRequestData']['customer']['billing']['country_code'],
 					    'orderCurrency'  => $basketRepository->load()->currency,
