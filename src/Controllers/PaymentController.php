@@ -212,8 +212,8 @@ class PaymentController extends Controller
                 $this->paymentService->logger('if', $paymentResponseData);
                 // Transaction secret used for the later checksum verification
                 $this->sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
-                //return $this->twig->render('Novalnet::NovalnetPaymentRedirectForm', ['nnPaymentUrl' => $paymentResponseData['result']['redirect_url']]);
-                return $this->response->redirectTo($paymentResponseData['result']['redirect_url']);
+                return $this->twig->render('Novalnet::NovalnetPaymentRedirectForm', ['nnPaymentUrl' => $paymentResponseData['result']['redirect_url']]);
+                //return $this->response->redirectTo($paymentResponseData['result']['redirect_url']);
             } else {
                 $this->paymentService->logger('else', $paymentResponseData);
                 // Redirect to confirmation page
