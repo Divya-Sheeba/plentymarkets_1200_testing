@@ -89,6 +89,21 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
                  $ccCustomFields = $paymentService->getCcFormFields();
             }
 	    
+		if($paymentKey == 'NOVALNET_GOOGLEPAY') {
+			// Get the seller name from the shop configuaration
+        $sellerName = $settingsService->getPaymentSettingsValue('business_name', 'novalnet_googlepay');
+			$googlePayData = [
+                            'clientKey'           => trim($settingsService->getPaymentSettingsValue('novalnet_client_key')),
+                            'merchantId'          => $settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay'),
+                            'sellerName'          => !empty($sellerName) ? $sellerName : $webstoreHelper->getCurrentWebstoreConfiguration()->name,
+                            'enforce'             => $settingsService->getPaymentSettingsValue('enforce', 'novalnet_googlepay'),
+                            'buttonType'          => $settingsService->getPaymentSettingsValue('button_type', 'novalnet_googlepay'),
+                            'buttonTheme'         => $settingsService->getPaymentSettingsValue('button_theme', 'novalnet_googlepay'),
+                            'buttonHeight'        => $settingsService->getPaymentSettingsValue('button_height', 'novalnet_googlepay'),
+                            'testMode'            => ($settingsService->getPaymentSettingsValue('test_mode', 'novalnet_googlepay') == true) ? 'SANDBOX' : 'PRODUCTION'
+                         ];	
+			
+		}
 	   
             // Check if the birthday field needs to show for guaranteed payments
             $showBirthday = ((!isset($paymentRequestData['paymentRequestData']['customer']['billing']['company']) && !isset($paymentRequestData['paymentRequestData']['customer']['birth_date'])) ||  (isset($paymentRequestData['paymentRequestData']['customer']['birth_date']) && time() < strtotime('+18 years', strtotime($paymentRequestData['paymentRequestData']['customer']['birth_date'])))) ? true : false;
@@ -107,10 +122,12 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
                                             'transactionData' => !empty($ccFormDetails) ? $ccFormDetails : '',
                                             'customData' => !empty($ccCustomFields) ? $ccCustomFields : '',
                                             'showBirthday' => $showBirthday,
-                                            'orderAmount' => $invoiceAmount,
+                                            'orderAmo
+					    unt' => $invoiceAmount,
 					    'orderLang'   => $paymentRequestData['paymentRequestData']['custom']['lang'],
 					    'countryCode' => $paymentRequestData['paymentRequestData']['customer']['billing']['country_code'],
-					    'orderCurrency'  => $basketRepository->load()->currency
+					    'orderCurrency'  => $basketRepository->load()->currency,
+					 'googlePayData' => !empty($googlePayData) ? $googlePayData : '';
 										]);
         } else {
             return '';
