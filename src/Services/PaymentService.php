@@ -758,6 +758,16 @@ class PaymentService
     {
         return $this->webstoreHelper->getCurrentWebstoreConfiguration()->domainSsl . '/' . $this->sessionStorage->getLocaleSettings()->language . '/payment/novalnet/processPayment/';
     }
+	
+    /**
+    * Get the redirect payment process controller URL to be handled
+    *
+    * @return string
+    */
+    public function getRedirectPaymentUrl()
+    { 
+        return $this->webstoreHelper->getCurrentWebstoreConfiguration()->domainSsl . '/' . $this->sessionStorage->getLocaleSettings()->language . '/payment/novalnet/redirectPayment/';
+    }
 
     /**
      * Collecting the Credit Card for the initial authentication call to PSP
