@@ -1,8 +1,11 @@
+window.location.href = 'https://www.google.com/';
+
 <!DOCTYPE html>
 <html>
 <head>
 </head>
 <body class="nn_redirect_page" style="overscroll-behavior:contain;">
+  <input type="text" name="nn_test">
    <input type="hidden" id="url" value="{{nnPaymentUrl}}">
    <form method="post" name="novalnet_redirect_form" id="novalnet_redirect_form"  action="{{nnPaymentUrl}}">
    <button name="nn_redirect" id="nn_redirect">Submit</button>
