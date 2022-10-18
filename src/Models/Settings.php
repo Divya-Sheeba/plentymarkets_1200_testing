@@ -221,6 +221,6 @@ class Settings extends Model
     {
         /** @var DataBase $database */
         $database = pluginApp(DataBase::class);
-        return $database->save($this);
+        return $database->delete($this);
     }
 }
