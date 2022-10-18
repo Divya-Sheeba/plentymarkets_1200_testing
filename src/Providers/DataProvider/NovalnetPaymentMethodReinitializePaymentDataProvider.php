@@ -126,7 +126,7 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
                                             'orderAmount' => $invoiceAmount,
 					    'redirectPayment' => $paymentService->isRedirectPayment($paymentKey),
 					    'redirectUrl' => $paymentService->getRedirectPaymentUrl(),
-					    'orderLang'   => $paymentRequestD$paymentService->isRedirectPayment($paymentKey, false),ta['paymentRequestData']['custom']['lang'],
+					    'orderLang'   => $paymentRequestData['paymentRequestData']['custom']['lang'],
 					    'countryCode' => $paymentRequestData['paymentRequestData']['customer']['billing']['country_code'],
 					    'orderCurrency'  => $basketRepository->load()->currency,
 					    'googlePayData' => !empty($googlePayData) ? $googlePayData : ''
