@@ -61,6 +61,10 @@ jQuery(document).ready(function() {
             var mopId = jQuery('#nn_google_pay_mop').val();
             if(displayGooglePayButton) {
                 // Display the Google Pay payment
+                if(jQuery('#nn_reinitializePayment').val() == 1) {
+                    // Initiating the payment request for the wallet payment
+                    NovalnetWalletPaymentObj.addPaymentButton("#nn_google_pay");
+                }
                 jQuery('li[data-id="'+mopId+'"]').show();
                 jQuery('li[data-id="'+mopId+'"]').click(function() {
                     if(jQuery('.gpay-card-info-container-fill').length == 0) {
