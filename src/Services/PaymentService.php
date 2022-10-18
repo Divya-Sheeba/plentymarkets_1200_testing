@@ -590,7 +590,7 @@ class PaymentService
     {
          // Assign the payment method
         if(empty($paymentResponseData['payment_method'])) {
-            $paymentResponseData['payment_method'] = $this->paymentHelper->getPaymentKey($paymentResponseData['transaction']['payment_type']);
+            $paymentResponseData['payment_method'] = strtolower($this->paymentHelper->getPaymentKey($paymentResponseData['transaction']['payment_type']));
         }
         $additionalInfo = $this->getAdditionalPaymentInfo($paymentResponseData);
         $orderTotalAmount = 0;
@@ -710,9 +710,6 @@ class PaymentService
                     $minimumGuaranteedAmount = !empty($configuredMinimumGuaranteedAmount) ? $configuredMinimumGuaranteedAmount : 999;
                     // Get the basket total amount
                     $basketAmount = !empty($basket->basketAmount) ? $this->paymentHelper->convertAmountToSmallerUnit($basket->basketAmount) : $this->sessionStorage->getPlugin()->getValue('nnOrderAmount');
-                    $this->getLogger(__METHOD__)->error('bill Ship', $billingShippingDetails);
-		    $this->getLogger(__METHOD__)->error('Min amount', $minimumGuaranteedAmount);
-		    $this->getLogger(__METHOD__)->error('nas', $basket);
 		    // First, we check the billing and shipping addresses are matched
                     // Second, we check the customer from the guaranteed payments supported countries
                     // Third, we check if the supported currency is selected
