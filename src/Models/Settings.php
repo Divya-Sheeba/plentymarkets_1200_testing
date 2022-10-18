@@ -11,6 +11,7 @@ namespace Novalnet\Models;
 use Carbon\Carbon;
 use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
 use Plenty\Modules\Plugin\DataBase\Contracts\Model;
+use Novalnet\Services\PaymentService;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -203,6 +204,9 @@ class Settings extends Model
         /** @var DataBase $database */
         $database = pluginApp(DataBase::class);
         $this->updatedAt = (string)Carbon::now();
+	$paymentService = pluginApp(PaymentService::class);
+	// Update the Novalnet API version 
+	$paymentService->updateApiVersion($this->value);
         // Log the configuration updated time for the reference
         $this->getLogger(__METHOD__)->error('Updated Novalnet settings details ' . $this->updatedAt, $this);
         return $database->save($this);
