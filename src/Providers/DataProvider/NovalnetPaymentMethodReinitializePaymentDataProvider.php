@@ -127,7 +127,7 @@ class NovalnetPaymentMethodReinitializePaymentDataProvider
 					    'orderLang'   => $paymentRequestData['paymentRequestData']['custom']['lang'],
 					    'countryCode' => $paymentRequestData['paymentRequestData']['customer']['billing']['country_code'],
 					    'orderCurrency'  => $basketRepository->load()->currency,
-					 'googlePayData' => !empty($googlePayData) ? $googlePayData : '';
+					 'googlePayData' => !empty($googlePayData) ? $googlePayData : ''
 										]);
         } else {
             return '';
