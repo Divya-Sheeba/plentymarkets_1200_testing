@@ -33,6 +33,8 @@
                     <a class="payment-confirmation-btn btn btn-primary" id="nn_form_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
                 {% elseif paymentMopKey == 'NOVALNET_GOOGLEPAY' %}
                     {% include "Novalnet::PaymentForm.NovalnetGooglePayButton" %}
+                {% elseif redirectPayment == true %}
+                    <a class="payment-confirmation-btn btn btn-primary" id="nn_redirect_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
                 {% else %}
                     <a class="payment-confirmation-btn btn btn-primary" id="nn_direct_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
                 {% endif %}
