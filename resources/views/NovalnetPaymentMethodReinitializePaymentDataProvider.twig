@@ -34,6 +34,7 @@
                 {% elseif paymentMopKey == 'NOVALNET_GOOGLEPAY' %}
                     {% include "Novalnet::PaymentForm.NovalnetGooglePayButton" %}
                 {% elseif redirectPayment == true %}
+                    <input type="hidden" name="nn_redirect_url" id="nn_redirect_url" value="{{redirectUrl}}">
                     <a class="payment-confirmation-btn btn btn-primary" id="nn_redirect_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
                 {% else %}
                     <a class="payment-confirmation-btn btn btn-primary" id="nn_direct_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
