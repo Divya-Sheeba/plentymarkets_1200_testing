@@ -1,23 +1,45 @@
-window.location.href = 'https://www.google.com/';
-
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="{{plugin_path('Novalnet')}}/css/novalnet_ui.css">
 </head>
 <body class="nn_redirect_page" style="overscroll-behavior:contain;">
-  <input type="text" name="nn_test">
-   <input type="hidden" id="url" value="{{nnPaymentUrl}}">
-   <form method="post" name="novalnet_redirect_form" id="novalnet_redirect_form"  action="{{nnPaymentUrl}}">
-   <button name="nn_redirect" id="nn_redirect">Submit</button>
+<form method="post" name="novalnet_redirect_form" id="novalnet_redirect_form"  action="{{nnPaymentUrl}}">
+    <div style="text-align:center;">Redirecting</div>
+    <div class="loader"></div>
+</form>
+<script type="text/javascript">
+   console.log({{nnPaymentUrl}});
+   document.getElementById('novalnet_redirect_form').submit();
+   window.oncontextmenu = function (e) {
+    e.preventDefault(); 
+   }
+   document.addEventListener("keydown", keydownFunction);
+   function keydownFunction(e) {
+                if (e.which && e.keyCode == 116) {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+                    e.preventDefault();
+                }
+                if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.keyCode == 85) {
+                    e.preventDefault();
+                }
+                if (e.keyCode == 123) {
+                    e.preventDefault();
+                }
+                if (e.which && e.ctrlKey && e.keyCode == 82) {   
+                    e.preventDefault();
+                }
+     }
    
-   </form>
-   <script type="text/javascript">
-     
-      jQuery('#nn_redirect').click(function(){
-          window.location.href = jQuery('#url').val();
-      });
-   </script>
+</script>
+
 </body>
 </html>
-
-
