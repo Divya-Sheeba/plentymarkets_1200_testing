@@ -209,11 +209,13 @@ class PaymentController extends Controller
         $paymentKey = $this->sessionStorage->getPlugin()->getValue('paymentkey');
         if($this->paymentService->isRedirectPayment($paymentKey)) {
             if(!empty($paymentResponseData) && !empty($paymentResponseData['result']['redirect_url']) && !empty($paymentResponseData['transaction']['txn_secret'])) {
+                $this->paymentService->logger('if', $paymentResponseData);
                 // Transaction secret used for the later checksum verification
                 $this->sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
-                return $this->twig->render('Novalnet::NovalnetPaymentRedirectForm', ['nnPaymentUrl' => $paymentResponseData['result']['redirect_url']]);
-                //$this->response->redirectTo($paymentResponseData['result']['redirect_url']);
+                //return $this->twig->render('Novalnet::NovalnetPaymentRedirectForm', ['nnPaymentUrl' => $paymentResponseData['result']['redirect_url']]);
+                return $this->response->redirectTo($paymentResponseData['result']['redirect_url']);
             } else {
+                $this->paymentService->logger('else', $paymentResponseData);
                 // Redirect to confirmation page
                 $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);
                 return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
