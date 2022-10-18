@@ -64,28 +64,28 @@ jQuery(document).ready(function() {
                 if(jQuery('#nn_reinitializePayment').val() == 1) {
                     // Initiating the payment request for the wallet payment
                     NovalnetWalletPaymentObj.addPaymentButton("#nn_google_pay");
-                }
-                jQuery('li[data-id="'+mopId+'"]').show();
-                jQuery('li[data-id="'+mopId+'"]').click(function() {
-                    if(jQuery('.gpay-card-info-container-fill').length == 0) {
-                        // Initiating the payment request for the wallet payment
-                        NovalnetWalletPaymentObj.addPaymentButton("#nn_google_pay");
-                        jQuery('.widget-place-order').children('div').hide();
-                    }
-                });
-                
-                if(jQuery('input[type="radio"][id*='+mopId+']').is(':checked')) {
-                    jQuery('li[data-id="'+mopId+'"]').click();
                 } else {
-                    jQuery('.widget-place-order').children('div').show();
-                    jQuery('.gpay-card-info-container-fill').hide();
-                }
+					jQuery('li[data-id="'+mopId+'"]').show();
+					jQuery('li[data-id="'+mopId+'"]').click(function() {
+						if(jQuery('.gpay-card-info-container-fill').length == 0) {
+							// Initiating the payment request for the wallet payment
+							NovalnetWalletPaymentObj.addPaymentButton("#nn_google_pay");
+							jQuery('.widget-place-order').children('div').hide();
+						}
+					});
+					
+					if(jQuery('input[type="radio"][id*='+mopId+']').is(':checked')) {
+						jQuery('li[data-id="'+mopId+'"]').click();
+					} else {
+						jQuery('.widget-place-order').children('div').show();
+						jQuery('.gpay-card-info-container-fill').hide();
+					}
+				}
             } else {
                 // Hide the Google Pay payment if it is not possible
                 jQuery('li[data-id="'+mopId+'"]').hide();
             }
-            
-             
+
             jQuery('.method-list-item').on('click',function() {
                 var clickedId = jQuery(this).attr('data-id');
                 if( clickedId !== undefined && clickedId != mopId ) {
@@ -95,6 +95,7 @@ jQuery(document).ready(function() {
                     jQuery("#nn_google_pay").show();                    
                     jQuery('.widget-place-order').children('div').hide();
                }
+                
             });
         });
     } catch (e) {
