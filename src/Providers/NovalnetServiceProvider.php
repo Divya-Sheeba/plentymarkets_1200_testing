@@ -245,7 +245,7 @@ class NovalnetServiceProvider extends ServiceProvider
                     $sessionStorage->getPlugin()->setValue('paymentkey', $paymentKey);
                     $nnDoRedirect = $sessionStorage->getPlugin()->getValue('nnDoRedirect');
                     $nnGooglePayDoRedirect = $sessionStorage->getPlugin()->getValue('nnGooglePayDoRedirect');
-                    if($settingsService->getPaymentSettingsValue('novalnet_order_creation') == true || $paymentService->isRedirectPayment($paymentKey) || !empty($nnDoRedirect) || !empty($nnGooglePayDoRedirect)) {
+                    if($settingsService->getPaymentSettingsValue('novalnet_order_creation') == true) {
                         $paymentResponseData = $paymentService->performServerCall();
                        
                         if($paymentService->isRedirectPayment($paymentKey) || !empty($nnDoRedirect) || !empty($nnGooglePayDoRedirect)) {
@@ -265,7 +265,7 @@ class NovalnetServiceProvider extends ServiceProvider
                     } else {
                             // Handle the further process to the order based on the payment response for direct payment payments
                              $paymentService->HandlePaymentResponse();
-                   }
+                    }
                 }
             });
     }
