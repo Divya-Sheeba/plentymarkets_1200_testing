@@ -142,7 +142,7 @@ class WebhookController extends Controller
     public function processWebhook()
     {
         // validated the IP Address
-        $invalidIpMsg =  $this->validateIpAddress
+        $invalidIpMsg =  $this->validateIpAddress();
 	if(!empty($invalidIpMsg)) {
 	   return $invalidIpMsg;	
 	}
