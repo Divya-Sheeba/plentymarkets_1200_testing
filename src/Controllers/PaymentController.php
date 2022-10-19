@@ -187,12 +187,12 @@ class PaymentController extends Controller
             $this->sessionStorage->getPlugin()->setValue('nnGooglePayDoRedirect', $paymentRequestPostData['nn_google_pay_do_redirect']);
         }
         if(!empty($paymentRequestPostData['nn_cc3d_redirect']) || !empty($paymentRequestPostData['nn_google_pay_do_redirect'])) {
-             //if(!empty($paymentRequestPostData['nn_reinitializePayment'])) {
-                //$this->paymentService->pushNotification('Please choose another payment method', 'error', 100);
-                //return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
-             //}
+             
              $paymentRequestData['paymentRequestData']['transaction']['return_url'] = $this->paymentService->getReturnPageUrl();
              $this->sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
+             if(!empty($paymentRequestPostData['nn_reinitializePayment'])) {
+                return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/payment/novalnet/redirectPayment');
+             }
              return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/place-order');
         }
         // Set the payment requests in the session for the further processings
