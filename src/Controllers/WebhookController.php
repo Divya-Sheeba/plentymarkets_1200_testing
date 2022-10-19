@@ -142,9 +142,15 @@ class WebhookController extends Controller
     public function processWebhook()
     {
         // validated the IP Address
-        return $this->validateIpAddress();
+        $invalidIpMsg =  $this->validateIpAddress
+	if(!empty($invalidIpMsg)) {
+	   return $invalidIpMsg;	
+	}
         // Validates the webhook params before processing
-        return $this->validateEventParams();
+        $mandateEventParamMsg = $this->validateEventParams();
+	if(!empty($mandateEventParamMsg)) {
+	   return $mandateEventParamMsg;	
+	}
         // Set Event data
         $this->eventType = $this->eventData['event']['type'];
         $this->parentTid = !empty($this->eventData['event']['parent_tid']) ? $this->eventData['event']['parent_tid'] : $this->eventData['event']['tid'];
