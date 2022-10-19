@@ -117,20 +117,34 @@ class PaymentController extends Controller
                     $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'success', 100);
                 } else {
                     $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);
+                    if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) {
+                        return $this->response->redirectTo('checkout');
+                    }
                 }
             } else {
                 $this->paymentService->pushNotification($paymentResponseData['status_text'], 'error', 100);
+                if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) {
+                  return $this->response->redirectTo('checkout');
+                }
             }
             $paymentRequestData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
             // Set the payment response in the session for the further processings
             $this->sessionStorage->getPlugin()->setValue('nnPaymentData', array_merge($paymentRequestData, $paymentResponseData));
+            if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) {
+                // Call the shop executePayment function
+                return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/place-order');
+            }
             // Handle the further process to the order based on the payment response
             $this->paymentService->HandlePaymentResponse();
             return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
 
         } else {
             $this->paymentService->pushNotification($paymentResponseData['status_text'], 'error', 100);
-            return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
+            if($this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) {
+                  return $this->response->redirectTo('checkout');
+            } else {
+                return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
+            }
         }
     }
 
