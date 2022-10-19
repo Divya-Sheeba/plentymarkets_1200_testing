@@ -263,6 +263,7 @@ class NovalnetServiceProvider extends ServiceProvider
                             }
                         }
                     } else {
+			    $this->getLogger(__METHOD__)->error('called here', $paymentKey);
                             // Handle the further process to the order based on the payment response for direct payment payments
                              $paymentService->HandlePaymentResponse();
                     }
