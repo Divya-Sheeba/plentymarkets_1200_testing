@@ -382,6 +382,7 @@ class WebhookController extends Controller
      */
     public function getOrderLanguage($orderObj)
     {
+	    $this->getLogger(__METHOD__)->error('lang', $orderObj);
         foreach($orderObj->properties as $orderProperty) {
             if($orderProperty->typeId == '6' ) {
                 $orderLanguage = $orderProperty->value;
