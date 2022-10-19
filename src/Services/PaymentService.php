@@ -639,7 +639,7 @@ class PaymentService
                 $additionalInfo['invoice_bankname']       = $paymentResponseData['transaction']['bank_details']['bank_name'];
                 $additionalInfo['invoice_bankplace']      = $paymentResponseData['transaction']['bank_details']['bank_place'];
                 $additionalInfo['due_date']               = $paymentResponseData['transaction']['due_date'];
-                $additionalInfo['invoice_ref']            = !empty($paymentResponseData['transaction']['invoice_ref']) ? $paymentResponseData['transaction']['invoice_ref'] : $this->sessionStorage->getPlugin()->getValue('nnInvoiceRef');;
+                $additionalInfo['invoice_ref']            = !empty($paymentResponseData['transaction']['invoice_ref']) ? $paymentResponseData['transaction']['invoice_ref'] : $this->sessionStorage->getPlugin()->getValue('nnInvoiceRef');
             }
             // Add the store details for the cashpayment
             if($paymentResponseData['payment_method'] == 'novalnet_cashpayment') {
