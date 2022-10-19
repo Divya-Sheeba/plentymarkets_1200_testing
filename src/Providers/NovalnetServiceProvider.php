@@ -192,11 +192,11 @@ class NovalnetServiceProvider extends ServiceProvider
 							$errorMsg = !empty($paymentResponseData['result']['status_text']) ? $paymentResponseData['result']['status_text'] : $paymentResponseData['status_text'];
 							$content = $errorMsg;
 							$contentType = 'errorCode';
-						} elseif($this->paymentService->isRedirectPayment($paymentKey)) {
+						} elseif($paymentService->isRedirectPayment($paymentKey)) {
 							if(!empty($paymentResponseData) && !empty($paymentResponseData['result']['redirect_url']) && !empty($paymentResponseData['transaction']['txn_secret'])) {
-								$this->paymentService->logger('ifP', $paymentResponseData);
+								$paymentService->logger('ifP', $paymentResponseData);
 								// Transaction secret used for the later checksum verification
-								$this->sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
+								$sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
 								$content = $twig->render('Novalnet::NovalnetPaymentRedirectForm', 
 								[
 									'nnPaymentUrl' => $paymentResponseData['result']['redirect_url']
