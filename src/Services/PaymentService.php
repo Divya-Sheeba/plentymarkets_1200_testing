@@ -565,13 +565,13 @@ class PaymentService
         }
 	// Insert payment response into Novalnet table
         $this->insertPaymentResponse($nnPaymentData);
-	    
+	 $this->getLogger(__METHOD__)->error('called here12345', $nnPaymentData);    
         // Update the Order No to the order if the payment before order completion set as 'No' for direct payments
         if(empty($nnOrderCreator) && $this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) {
             $paymentResponseData = $this->sendPostbackCall($nnPaymentData);
             $nnPaymentData = array_merge($nnPaymentData, $paymentResponseData);
         }
-        
+        $this->getLogger(__METHOD__)->error('called here123', $nnPaymentData);
         // Create a plenty payment to the order
         $this->paymentHelper->createPlentyPayment($nnPaymentData);
     }
