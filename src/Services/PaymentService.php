@@ -565,13 +565,14 @@ class PaymentService
         }
 	// Insert payment response into Novalnet table
         $this->insertPaymentResponse($nnPaymentData);
-	 $this->getLogger(__METHOD__)->error('called here12345', $nnPaymentData);    
+	
         // Update the Order No to the order if the payment before order completion set as 'No' for direct payments
         if(empty($nnOrderCreator) && $this->settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) {
             $paymentResponseData = $this->sendPostbackCall($nnPaymentData);
             $nnPaymentData = array_merge($nnPaymentData, $paymentResponseData);
+	    $this->sessionStorage->getPlugin()->setValue('nnInvoiceRef', $nnPaymentData['transaction']['invoice_ref']);
         }
-        $this->getLogger(__METHOD__)->error('called here123', $nnPaymentData);
+       
         // Create a plenty payment to the order
         $this->paymentHelper->createPlentyPayment($nnPaymentData);
     }
@@ -622,7 +623,6 @@ class PaymentService
      */
     public function getAdditionalPaymentInfo($paymentResponseData)
     {
-	    $this->getLogger(__METHOD__)->error('responseData', $paymentResponseData);
         $lang = !empty($paymentResponseData['custom']['lang']) ? strtolower((string)$paymentResponseData['custom']['lang']) : $paymentResponseData['lang'];
         // Add the extra information for the further processing
         $additionalInfo = [
@@ -639,7 +639,7 @@ class PaymentService
                 $additionalInfo['invoice_bankname']       = $paymentResponseData['transaction']['bank_details']['bank_name'];
                 $additionalInfo['invoice_bankplace']      = $paymentResponseData['transaction']['bank_details']['bank_place'];
                 $additionalInfo['due_date']               = $paymentResponseData['transaction']['due_date'];
-                $additionalInfo['invoice_ref']            = $paymentResponseData['transaction']['invoice_ref'];
+                $additionalInfo['invoice_ref']            = !empty($paymentResponseData['transaction']['invoice_ref']) ? $paymentResponseData['transaction']['invoice_ref'] : $this->sessionStorage->getPlugin()->getValue('nnInvoiceRef');;
             }
             // Add the store details for the cashpayment
             if($paymentResponseData['payment_method'] == 'novalnet_cashpayment') {
