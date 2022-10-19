@@ -152,7 +152,7 @@ class WebhookController extends Controller
         // Retreiving the shop's order information based on the transaction
         $this->orderDetails = $this->getOrderDetails();
         //  Get order language from the order object
-        $this->orderLanguage = $this->getOrderLanguage($this->orderDetails);
+        $this->orderLanguage = $this->getOrderLanguage();
         // Handle the individual webhook process
         if($this->eventData['result']['status'] == 'SUCCESS') {
             switch($this->eventType) {
@@ -349,7 +349,7 @@ class WebhookController extends Controller
     public function handleCommunicationBreak($orderObj)
     {
         //  Get order language from the order object
-        $orderlanguage = $this->getOrderLanguage($orderObj);
+        $orderlanguage = $this->getOrderLanguage();
         foreach($orderObj->properties as $orderProperty) {
             if($orderProperty->typeId == '3' && $this->paymentHelper->getPaymentKeyByMop($orderProperty->value)) {  // Is the Novalnet payment methods
                 $this->eventData['custom']['lang'] = $orderlanguage;
@@ -380,9 +380,10 @@ class WebhookController extends Controller
      *
      * @return string
      */
-    public function getOrderLanguage($orderObj)
+    public function getOrderLanguage()
     {
-	    $this->getLogger(__METHOD__)->error('lang', $orderObj);
+	$orderObj = $this->getOrderObject($this->eventData['transaction']['order_no']);
+	$this->getLogger(__METHOD__)->error('lang', $orderObj);
         foreach($orderObj->properties as $orderProperty) {
             if($orderProperty->typeId == '6' ) {
                 $orderLanguage = $orderProperty->value;
