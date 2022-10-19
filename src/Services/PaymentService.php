@@ -1042,17 +1042,17 @@ class PaymentService
             $privateKey = $this->settingsService->getPaymentSettingsValue('novalnet_private_key');
             $paymentRequestData = [];
 	    $paymentRequestData['transaction']['tid'] = $transactionData['tid'];
-            $paymentRequestData['custom']['lang'] = 'DE';
+            $paymentRequestData['custom']['lang'] = strtoupper($transactionData['lang']);
             // Send the payment capture/void call to Novalnet server
             $paymentResponseData = $this->paymentHelper->executeCurl($paymentRequestData, $paymentUrl, $privateKey);
             $paymentResponseData = array_merge($paymentRequestData, $paymentResponseData);
             // Booking Message
             if(in_array($paymentResponseData['transaction']['status'], ['PENDING', 'CONFIRMED'])) {
-                $paymentResponseData['bookingText'] = sprintf($this->paymentHelper->getTranslatedText('webhook_order_confirmation_text', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
+                $paymentResponseData['bookingText'] = sprintf($this->paymentHelper->getTranslatedText('webhook_order_confirmation_text', $transactionData['lang']), date('d.m.Y'), date('H:i:s'));
             } else {
 		$paymentResponseData['transaction']['amount'] = 0;
 		$paymentResponseData['transaction']['currency'] = $transactionData['currency'];
-                $paymentResponseData['bookingText'] = sprintf($this->paymentHelper->getTranslatedText('webhook_transaction_cancellation', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
+                $paymentResponseData['bookingText'] = sprintf($this->paymentHelper->getTranslatedText('webhook_transaction_cancellation', $transactionData['lang']), date('d.m.Y'), date('H:i:s'));
             }
             // Get the Novalnet payment methods Id
             $mop = $this->paymentHelper->getPaymentMethodByKey(strtoupper($paymentRequestData['paymentName']));
