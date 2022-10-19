@@ -184,15 +184,31 @@ class NovalnetServiceProvider extends ServiceProvider
                 $sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
 
                 // If payment before order creation option was set as 'No' the payment will be created initially
-                if($settingsService->getPaymentSettingsValue('novalnet_order_creation') != true
-                && (in_array($paymentKey, ['NOVALNET_INVOICE', 'NOVALNET_PREPAYMENT', 'NOVALNET_CASHPAYMENT', 'NOVALNET_MULTIBANCO']) || ($paymentKey == 'NOVALNET_GUARANTEED_INVOICE' && $showBirthday == false))) {
-                    $privateKey = $settingsService->getPaymentSettingsValue('novalnet_private_key');
-                    $paymentResponseData = $paymentService->performServerCall();
-                    if(!empty($paymentResponseData) && ($paymentResponseData['result']['status'] == 'FAILURE' || $paymentResponseData['status'] == 'FAILURE')) {
-                        $content = $paymentResponseData['result']['status_text'];
-                        $contentType = 'errorCode';
-                    }
-                }
+                if($settingsService->getPaymentSettingsValue('novalnet_order_creation') != true) { 
+					if(in_array($paymentKey, ['NOVALNET_INVOICE', 'NOVALNET_PREPAYMENT', 'NOVALNET_CASHPAYMENT', 'NOVALNET_MULTIBANCO']) || ($paymentKey == 'NOVALNET_GUARANTEED_INVOICE' && $showBirthday == false) || $paymentService->isRedirectPayment($paymentKey)) {
+						$privateKey = $settingsService->getPaymentSettingsValue('novalnet_private_key');
+						$paymentResponseData = $paymentService->performServerCall();
+						if(!empty($paymentResponseData) && ($paymentResponseData['result']['status'] == 'FAILURE' || $paymentResponseData['status'] == 'FAILURE')) {
+							$errorMsg = !empty($paymentResponseData['result']['status_text']) ? $paymentResponseData['result']['status_text'] : $paymentResponseData['status_text'];
+							$content = $errorMsg;
+							$contentType = 'errorCode';
+						} elseif($this->paymentService->isRedirectPayment($paymentKey)) {
+							if(!empty($paymentResponseData) && !empty($paymentResponseData['result']['redirect_url']) && !empty($paymentResponseData['transaction']['txn_secret'])) {
+								$this->paymentService->logger('ifP', $paymentResponseData);
+								// Transaction secret used for the later checksum verification
+								$this->sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
+								$content = $twig->render('Novalnet::NovalnetPaymentRedirectForm', 
+								[
+									'nnPaymentUrl' => $paymentResponseData['result']['redirect_url']
+								]);
+								$contentType = 'htmlContent';
+							} else {
+								$content = $paymentResponseData['result']['status_text'];
+								$contentType = 'errorCode';
+							}
+						}
+					}
+				}
                 $event->setValue($content);
                 $event->setType($contentType);
             }
