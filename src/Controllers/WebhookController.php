@@ -215,6 +215,7 @@ class WebhookController extends Controller
     {
         // Mandatory webhook params
         $requiredParams = ['event' => ['type', 'checksum', 'tid'], 'result' => ['status']];
+	$this->getLogger(__METHOD__)->error('event data', $this->eventData);
         // Validate required parameters
         foreach($requiredParams as $category => $parameters) {
             if(empty($this->eventData[$category])) {
