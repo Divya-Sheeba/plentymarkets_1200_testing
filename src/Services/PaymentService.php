@@ -1188,12 +1188,13 @@ class PaymentService
     public function updateApiVersion($paymentRequestData)
     {
 		
-		$paymentRequestData = [];
+		$merchantRequestData = [];
 		// Build the merchant Data
-		$paymentRequestData['merchant'] = ['signature' => $paymentRequestData['novalnet_public_key']];
+		$merchantRequestData['merchant'] = ['signature' => $paymentRequestData['novalnet_public_key']];
 		// Build the Custom Data
-		$paymentRequestData['custom'] = ['lang' => 'DE'];
-		$paymentResponseData = $this->paymentHelper->executeCurl($paymentRequestData, NovalnetConstants::MERCHANT_DETAILS, $paymentRequestData['novalnet_private_key']);
+		$merchantRequestData['custom'] = ['lang' => 'DE'];
+	        $this->getLogger(__METHOD__)->error('merchant request', $merchantRequestData);
+		$paymentResponseData = $this->paymentHelper->executeCurl($merchantRequestData, NovalnetConstants::MERCHANT_DETAILS, $paymentRequestData['novalnet_private_key']);
 		if($paymentResponseData['result']['status'] == 'SUCCESS') {
 			$this->getLogger(__METHOD__)->error('Novalnet::updateApiVersion', 'Novalnet API Vrsion updated successfully');
 		} else {
