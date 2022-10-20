@@ -27,8 +27,8 @@
 {% if 'NOVALNET' in paymentMopKey %}
     {% if services.template.isCurrentTemplate('tpl.confirmation') %}
         <div id="nnReinitPaymentMethod-{{order.id}}" class="row con-reinit novalnet-reinitiate" style="display:{{display}};">
-            <strong class="col-xs-6 col-sm-5"></strong>
-            <span class="col-xs-6 col-sm-7">
+            <strong class="col-6 col-sm-5"></strong>
+            <span class="col-6 col-sm-7">
                 {% if paymentMopKey in ['NOVALNET_SEPA', 'NOVALNET_GUARANTEED_INVOICE', 'NOVALNET_GUARANTEED_SEPA', 'NOVALNET_CC'] %}
                     <a class="payment-confirmation-btn btn btn-primary" id="nn_form_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
                 {% elseif paymentMopKey == 'NOVALNET_GOOGLEPAY' %}
