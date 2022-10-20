@@ -26,7 +26,7 @@
 {# Check if it is Novalnet Payments then dispay the Reinit payment button in the order confirmation page #}
 {% if 'NOVALNET' in paymentMopKey %}
     {% if services.template.isCurrentTemplate('tpl.confirmation') %}
-        <div id="nnReinitPaymentMethod-{{order.id}}" class="row con-reinit" style="display:{{display}};">
+        <div id="nnReinitPaymentMethod-{{order.id}}" class="row con-reinit novalnet-reinitiate" style="display:{{display}};">
             <strong class="col-xs-6 col-sm-5"></strong>
             <span class="col-xs-6 col-sm-7">
                 {% if paymentMopKey in ['NOVALNET_SEPA', 'NOVALNET_GUARANTEED_INVOICE', 'NOVALNET_GUARANTEED_SEPA', 'NOVALNET_CC'] %}
