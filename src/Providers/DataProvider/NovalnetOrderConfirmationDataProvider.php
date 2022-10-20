@@ -85,7 +85,7 @@ class NovalnetOrderConfirmationDataProvider
                 }
             }
             $transactionComment .= (string) $transactionComments;
-            $transactionComment .= PHP_EOL;
+            //$transactionComment .= PHP_EOL;
         }
 
         // Replace PHP_EOL as break tag for the alignment
