@@ -21,6 +21,7 @@ use \Plenty\Modules\Authorization\Services\AuthHelper;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Plenty\Modules\Payment\Models\PaymentProperty;
+use Plenty\Plugin\Mail\Contracts\MailerContract;
 use \stdClass;
 use Plenty\Plugin\Log\Loggable;
 
@@ -420,6 +421,7 @@ class WebhookController extends Controller
         $this->eventData['bookingText'] = $webhookComments;
         // Create the payment to the plenty order
         $this->paymentHelper->createPlentyPayment($this->eventData);
+	$this->sendWebhookMail($webhookComments);
         return $this->renderTemplate($webhookComments);
     }
 
@@ -577,5 +579,28 @@ class WebhookController extends Controller
         // Create the payment to the plenty order
         $this->paymentHelper->createPlentyPayment($this->eventData);
         return $this->renderTemplate($webhookComments);
+    }
+	
+    /**
+     * Send the webhook script email for the execution
+     *
+     * @param string $mailContent
+     *
+     * @return none
+     */
+    public function sendWebhookMail($mailContent)
+    {
+        try
+        {
+            $toAddress  = $this->settingsService->getPaymentSettingsValue('novalnet_webhook_email_to');
+            if($toAddress)
+            {
+                $subject = 'Novalnet Callback Script Access Report';
+                $mailer  = pluginApp(MailerContract::class);
+                $mailer->sendHtml($mailContent, $toAddress, $subject);
+            }
+        } catch (\Exception $e) {
+            $this->getLogger(__METHOD__)->error('Novalnet::sendWebhookMail', $e);
+        }
     }
 }
